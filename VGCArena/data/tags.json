@@ -1,0 +1,18 @@
+{
+  "tags": [
+    { "id": "tailwind",      "label": "Tailwind",      "icon": "💨" },
+    { "id": "trick-room",    "label": "Trick Room",    "icon": "🔮" },
+    { "id": "sun",           "label": "Sun Team",      "icon": "☀️" },
+    { "id": "rain",          "label": "Rain Team",     "icon": "🌧️" },
+    { "id": "sand",          "label": "Sand Team",     "icon": "🏜️" },
+    { "id": "snow",          "label": "Snow Team",     "icon": "❄️" },
+    { "id": "hyper-offense", "label": "Hyper Offense", "icon": "⚔️" },
+    { "id": "balance",       "label": "Balance",       "icon": "⚖️" },
+    { "id": "stall",         "label": "Stall",         "icon": "🛡️" },
+    { "id": "goodstuffs",    "label": "Goodstuffs",    "icon": "🌟" },
+    { "id": "hard-trick-room","label": "Hard TR",      "icon": "🐌" },
+    { "id": "semi-trick-room","label": "Semi TR",      "icon": "⏳" },
+    { "id": "perish-song",   "label": "Perish Song",   "icon": "🎶" },
+    { "id": "setup-sweep",   "label": "Setup Sweep",   "icon": "📈" }
+  ]
+}

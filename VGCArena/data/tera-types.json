@@ -1,0 +1,23 @@
+{
+  "types": [
+    { "id": 1,  "name": "Normal",   "color": "#A8A878" },
+    { "id": 2,  "name": "Fighting", "color": "#C03028" },
+    { "id": 3,  "name": "Flying",   "color": "#A890F0" },
+    { "id": 4,  "name": "Poison",   "color": "#A040A0" },
+    { "id": 5,  "name": "Ground",   "color": "#E0C068" },
+    { "id": 6,  "name": "Rock",     "color": "#B8A038" },
+    { "id": 7,  "name": "Bug",      "color": "#A8B820" },
+    { "id": 8,  "name": "Ghost",    "color": "#705898" },
+    { "id": 9,  "name": "Steel",    "color": "#B8B8D0" },
+    { "id": 10, "name": "Fire",     "color": "#F08030" },
+    { "id": 11, "name": "Water",    "color": "#6890F0" },
+    { "id": 12, "name": "Grass",    "color": "#78C850" },
+    { "id": 13, "name": "Electric", "color": "#F8D030" },
+    { "id": 14, "name": "Psychic",  "color": "#F85888" },
+    { "id": 15, "name": "Ice",      "color": "#98D8D8" },
+    { "id": 16, "name": "Dragon",   "color": "#7038F8" },
+    { "id": 17, "name": "Dark",     "color": "#705848" },
+    { "id": 18, "name": "Fairy",    "color": "#EE99AC" },
+    { "id": 19, "name": "Stellar",  "color": "#44AAFF" }
+  ]
+}

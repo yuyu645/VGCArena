@@ -1,0 +1,215 @@
+/* Feed / Home Page Layout */
+.home-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: var(--space-6);
+  margin-top: var(--space-5);
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .home-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Sidebar de Filtros */
+.filter-sidebar {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  position: sticky;
+  top: 92px;
+}
+
+.filter-section {
+  margin-bottom: var(--space-5);
+}
+
+.filter-section-title {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-3);
+  font-weight: 700;
+}
+
+.filter-option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+/* Team Cards Grid */
+.teams-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--space-5);
+}
+
+/* Team Builder Form */
+.builder-step {
+  display: none;
+}
+
+.builder-step.active {
+  display: block;
+}
+
+.builder-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-5);
+}
+
+@media (max-width: 1024px) {
+  .builder-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .builder-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.builder-card-slot {
+  background-color: var(--bg-surface);
+  border: 2px dashed var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 250px;
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-out);
+}
+
+.builder-card-slot.filled {
+  border-style: solid;
+  border-color: var(--border-subtle);
+  justify-content: flex-start;
+  cursor: default;
+}
+
+.builder-card-slot:hover:not(.filled) {
+  border-color: var(--accent-primary);
+  background-color: var(--bg-hover);
+}
+
+/* Autocomplete suggestions */
+.autocomplete-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.autocomplete-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 10;
+  box-shadow: var(--shadow-md);
+}
+
+.suggestion-item {
+  padding: var(--space-2) var(--space-3);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-out);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.suggestion-item:hover, .suggestion-item.active {
+  background-color: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+/* Detalles del equipo */
+.team-details-header {
+  margin-bottom: var(--space-5);
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: var(--space-4);
+}
+
+.pokemon-details-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-5);
+  margin-bottom: var(--space-6);
+}
+
+@media (max-width: 768px) {
+  .pokemon-details-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.detail-pokemon-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  display: flex;
+  gap: var(--space-4);
+}
+
+.detail-pokemon-card .sprite-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 110px;
+}
+
+.detail-pokemon-card img {
+  width: 96px;
+  height: 96px;
+  object-fit: contain;
+}
+
+.detail-pokemon-card .meta-info {
+  flex: 1;
+}
+
+/* Comentarios */
+.comments-section {
+  margin-top: var(--space-6);
+}
+
+.comment-input-area {
+  margin-bottom: var(--space-5);
+}
+
+.comment-item {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-3);
+}
+
+.comment-item.reply {
+  margin-left: var(--space-6);
+  border-left: 2px solid var(--accent-primary);
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--space-2);
+  font-size: 0.85rem;
+}

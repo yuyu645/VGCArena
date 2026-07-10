@@ -1,0 +1,16 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-07-09",
+  "currentRegSet": "reg-h",
+  "regulations": [
+    {
+      "id": "reg-h",
+      "name": "Regulation H",
+      "season": "VGC 2024 Reg H",
+      "startDate": "2024-09-01",
+      "endDate": "2025-01-01",
+      "active": true,
+      "description": "Formato sin Pokémon Legendarios mayores ni de Paradoja. Los Pokémon de la lista permitida son legales."
+    }
+  ]
+}

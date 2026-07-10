@@ -1,0 +1,170 @@
+{
+  "mega-meganium": {
+    "pokeapiId": 20001,
+    "name": "mega-meganium",
+    "types": ["Grass"],
+    "abilities": ["Overgrow", "Triage"],
+    "moves": ["giga-drain", "energy-ball", "dazzling-gleam", "leech-seed", "synthesis", "aromatherapy", "protect", "reflect", "light-screen"]
+  },
+  "mega-excadrill": {
+    "pokeapiId": 20002,
+    "name": "mega-excadrill",
+    "types": ["Ground", "Steel"],
+    "abilities": ["Piercing Drill"],
+    "moves": ["earthquake", "iron-head", "rock-slide", "swords-dance", "high-horsepower", "protect", "rapid-spin"]
+  },
+  "mega-greninja": {
+    "pokeapiId": 20003,
+    "name": "mega-greninja",
+    "types": ["Water", "Dark"],
+    "abilities": ["Protean"],
+    "moves": ["hydro-pump", "water-shuriken", "dark-pulse", "ice-beam", "uturn", "spikes", "toxic-spikes", "protect"]
+  },
+  "mega-skarmory": {
+    "pokeapiId": 20004,
+    "name": "mega-skarmory",
+    "types": ["Steel", "Flying"],
+    "abilities": ["Stalwart"],
+    "moves": ["brave-bird", "iron-defense", "body-press", "roost", "whirlwind", "spikes", "stealth-rock", "protect"]
+  },
+  "mega-chimecho": {
+    "pokeapiId": 20005,
+    "name": "mega-chimecho",
+    "types": ["Psychic"],
+    "abilities": ["Levitate"],
+    "moves": ["psychic", "shadow-ball", "recover", "healing-wish", "yawn", "taunt", "helping-hand", "protect"]
+  },
+  "mega-chandelure": {
+    "pokeapiId": 20006,
+    "name": "mega-chandelure",
+    "types": ["Ghost", "Fire"],
+    "abilities": ["Infiltrator", "Shadow Shield"],
+    "moves": ["shadow-ball", "overheat", "heat-wave", "energy-ball", "trick", "will-o-wisp", "protect"]
+  },
+  "mega-golurk": {
+    "pokeapiId": 20007,
+    "name": "mega-golurk",
+    "types": ["Ground", "Ghost"],
+    "abilities": ["Unseen Fist"],
+    "moves": ["earthquake", "poltergeist", "shadow-punch", "close-combat", "ice-punch", "stone-edge", "protect"]
+  },
+  "mega-victreebel": {
+    "pokeapiId": 20008,
+    "name": "mega-victreebel",
+    "types": ["Grass", "Poison"],
+    "abilities": ["Innards Out"],
+    "moves": ["leaf-blade", "sludge-bomb", "strength-sap", "sleep-powder", "sucker-punch", "swords-dance", "protect"]
+  },
+  "mega-starmie": {
+    "pokeapiId": 20009,
+    "name": "mega-starmie",
+    "types": ["Water", "Psychic"],
+    "abilities": ["Huge Power"],
+    "moves": ["hydro-pump", "psychic", "ice-beam", "thunderbolt", "recover", "flip-turn", "protect"]
+  },
+  "mega-raichu-x": {
+    "pokeapiId": 20010,
+    "name": "mega-raichu-x",
+    "types": ["Electric"],
+    "abilities": ["Electric Terrain"],
+    "moves": ["thunderbolt", "volt-tackle", "fake-out", "extreme-speed", "nuzzle", "surf", "protect"]
+  },
+  "mega-raichu-y": {
+    "pokeapiId": 20011,
+    "name": "mega-raichu-y",
+    "types": ["Electric", "Psychic"],
+    "abilities": ["Magic Guard"],
+    "moves": ["thunderbolt", "psychic", "expanding-force", "nasty-plot", "focus-blast", "surf", "protect"]
+  },
+  "mega-staraptor": {
+    "pokeapiId": 20012,
+    "name": "mega-staraptor",
+    "types": ["Normal", "Flying"],
+    "abilities": ["Contrary"],
+    "moves": ["brave-bird", "close-combat", "double-edge", "u-turn", "defog", "roost", "protect"]
+  },
+  "mega-scolipede": {
+    "pokeapiId": 20013,
+    "name": "mega-scolipede",
+    "types": ["Bug", "Poison"],
+    "abilities": ["Shell Armor", "Speed Boost"],
+    "moves": ["megahorn", "poison-jab", "earthquake", "swords-dance", "protect", "baton-pass"]
+  },
+  "mega-scrafty": {
+    "pokeapiId": 20014,
+    "name": "mega-scrafty",
+    "types": ["Dark", "Fighting"],
+    "abilities": ["Intimidate"],
+    "moves": ["drain-punch", "knock-off", "close-combat", "fake-out", "ice-punch", "dragon-dance", "protect"]
+  },
+  "mega-drampa": {
+    "pokeapiId": 20015,
+    "name": "mega-drampa",
+    "types": ["Normal", "Dragon"],
+    "abilities": ["Berserk"],
+    "moves": ["draco-meteor", "hyper-voice", "fire-blast", "roost", "glare", "protect"]
+  },
+  "mega-froslass": {
+    "pokeapiId": 20016,
+    "name": "mega-froslass",
+    "types": ["Ice", "Ghost"],
+    "abilities": ["Snow Warning"],
+    "moves": ["blizzard", "shadow-ball", "aurora-veil", "spikes", "destiny-bond", "protect"]
+  },
+  "mega-emboar": {
+    "pokeapiId": 20017,
+    "name": "mega-emboar",
+    "types": ["Fire", "Fighting"],
+    "abilities": ["Mold Breaker"],
+    "moves": ["flare-blitz", "superpower", "wild-charge", "sucker-punch", "head-smash", "protect"]
+  },
+  "mega-chesnaught": {
+    "pokeapiId": 20018,
+    "name": "mega-chesnaught",
+    "types": ["Grass", "Fighting"],
+    "abilities": ["Bulletproof"],
+    "moves": ["wood-hammer", "drain-punch", "spiky-shield", "body-press", "spikes", "synthesis", "protect"]
+  },
+  "mega-delphox": {
+    "pokeapiId": 20019,
+    "name": "mega-delphox",
+    "types": ["Fire", "Psychic"],
+    "abilities": ["Levitate"],
+    "moves": ["heat-wave", "psychic", "fire-blast", "expanding-force", "shadow-ball", "calm-mind", "protect"]
+  },
+  "mega-dragonite": {
+    "pokeapiId": 20020,
+    "name": "mega-dragonite",
+    "types": ["Dragon", "Flying"],
+    "abilities": ["Multiscale"],
+    "moves": ["outrage", "dual-wingbeat", "extreme-speed", "earthquake", "dragon-dance", "roost", "protect"]
+  },
+  "mega-eelektross": {
+    "pokeapiId": 20021,
+    "name": "mega-eelektross",
+    "types": ["Electric"],
+    "abilities": ["Eelevate", "Levitate"],
+    "moves": ["wild-charge", "giga-drain", "flamethrower", "drain-punch", "discharge", "knock-off", "protect"]
+  },
+  "mega-pyroar": {
+    "pokeapiId": 20022,
+    "name": "mega-pyroar",
+    "types": ["Fire", "Normal"],
+    "abilities": ["Fire Mane"],
+    "moves": ["overheat", "hyper-voice", "heat-wave", "will-o-wisp", "snarl", "protect"]
+  },
+  "mega-eternal-floette": {
+    "pokeapiId": 20023,
+    "name": "mega-eternal-floette",
+    "types": ["Fairy"],
+    "abilities": ["Flower Veil"],
+    "moves": ["light-of-ruin", "moonblast", "psychic", "calm-mind", "protect"]
+  },
+  "mega-garchomp-z": {
+    "pokeapiId": 20024,
+    "name": "mega-garchomp-z",
+    "types": ["Dragon", "Ground"],
+    "abilities": ["Rough Skin", "Sand Veil"],
+    "moves": ["earthquake", "dragon-claw", "swords-dance", "rock-slide", "fire-fang", "protect"]
+  }
+}
