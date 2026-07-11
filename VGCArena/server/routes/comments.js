@@ -5,7 +5,7 @@ const { requireAuth } = require('../middleware/auth');
 const router = express.Router();
 
 // POST /api/teams/:id/comments - Agregar comentario o respuesta
-router.post('/teams/:id/comments', requireAuth, (req, res) => {
+router.post('/teams/:id/comments', requireAuth, async (req, res) => {
   const teamId = req.params.id;
   const userId = req.user.id;
   const { body, parentId } = req.body;
@@ -17,26 +17,26 @@ router.post('/teams/:id/comments', requireAuth, (req, res) => {
     return res.status(400).json({ error: 'El comentario no puede superar los 1000 caracteres.' });
   }
 
-  const team = db.findOne('teams', { id: teamId });
+  const team = await db.findOne('teams', { id: teamId });
   if (!team) {
     return res.status(404).json({ error: 'Equipo no encontrado.' });
   }
 
   if (parentId) {
-    const parentComment = db.findOne('comments', { id: parentId });
+    const parentComment = await db.findOne('comments', { id: parentId });
     if (!parentComment) {
       return res.status(404).json({ error: 'Comentario de origen no encontrado.' });
     }
   }
 
-  const newComment = db.insert('comments', {
+  const newComment = await db.insert('comments', {
     userId,
     teamId,
     parentId: parentId || null,
     body: body.trim()
   });
 
-  const user = db.findOne('users', { id: userId });
+  const user = await db.findOne('users', { id: userId });
 
   res.status(201).json({
     ...newComment,
@@ -46,9 +46,9 @@ router.post('/teams/:id/comments', requireAuth, (req, res) => {
 });
 
 // DELETE /api/comments/:commentId - Eliminar comentario propio y todo su subárbol
-router.delete('/comments/:commentId', requireAuth, (req, res) => {
+router.delete('/comments/:commentId', requireAuth, async (req, res) => {
   const commentId = req.params.commentId;
-  const comment = db.findOne('comments', { id: commentId });
+  const comment = await db.findOne('comments', { id: commentId });
 
   if (!comment) {
     return res.status(404).json({ error: 'Comentario no encontrado.' });
@@ -59,7 +59,7 @@ router.delete('/comments/:commentId', requireAuth, (req, res) => {
 
   // Recolectar el subárbol completo (hijos, nietos, ...) para no dejar
   // comentarios huérfanos: invisibles en el árbol pero contados en el total.
-  const all = db.find('comments', { teamId: comment.teamId });
+  const all = await db.find('comments', { teamId: comment.teamId });
   const byParent = new Map();
   for (const c of all) {
     const key = c.parentId || null;
@@ -78,7 +78,7 @@ router.delete('/comments/:commentId', requireAuth, (req, res) => {
   }
 
   for (const id of toDelete) {
-    db.delete('comments', { id });
+    await db.delete('comments', { id });
   }
 
   res.json({ message: 'Comentario eliminado correctamente.', deleted: toDelete.length });

@@ -123,7 +123,7 @@ function validateTeamPokemon(pokemon, allowlist) {
 }
 
 // GET /api/teams - Feed filtrado y paginado
-router.get('/', optionalAuth, (req, res) => {
+router.get('/', optionalAuth, async (req, res) => {
   const { regSet, tag, pokemon, search, sort } = req.query;
 
   // Normalizar paginación: page >= 1, 1 <= limit <= 50.
@@ -132,20 +132,20 @@ router.get('/', optionalAuth, (req, res) => {
   let limit = parseInt(req.query.limit, 10);
   if (!Number.isFinite(limit) || limit < 1) limit = 10;
   if (limit > 50) limit = 50;
-  
-  let teams = db.find('teams');
-  
+
+  const allTeams = await db.find('teams');
+
   // Enriquecer equipos con creador y pokémon
-  teams = teams.map(team => {
-    const creator = db.findOne('users', { id: team.userId });
-    const pokemonList = db.find('team_pokemon', { teamId: team.id });
-    
+  let teams = await Promise.all(allTeams.map(async team => {
+    const creator = await db.findOne('users', { id: team.userId });
+    const pokemonList = await db.find('team_pokemon', { teamId: team.id });
+
     return {
       ...team,
       creator: creator ? { username: creator.username, avatar: creator.avatar } : null,
       pokemon: pokemonList.sort((a, b) => a.slot - b.slot)
     };
-  });
+  }));
 
   // Aplicar filtros
   if (regSet) {
@@ -201,9 +201,9 @@ router.get('/', optionalAuth, (req, res) => {
 });
 
 // GET /api/teams/:id - Detalle de un equipo
-router.get('/:id', optionalAuth, (req, res) => {
+router.get('/:id', optionalAuth, async (req, res) => {
   const teamId = req.params.id;
-  const team = db.findOne('teams', { id: teamId });
+  const team = await db.findOne('teams', { id: teamId });
 
   if (!team) {
     return res.status(404).json({ error: 'Equipo no encontrado.' });
@@ -211,27 +211,27 @@ router.get('/:id', optionalAuth, (req, res) => {
 
   // Incrementar vistas
   const updatedViewCount = (team.viewCount || 0) + 1;
-  db.update('teams', { id: teamId }, { viewCount: updatedViewCount });
+  await db.update('teams', { id: teamId }, { viewCount: updatedViewCount });
 
-  const creator = db.findOne('users', { id: team.userId });
-  const pokemonList = db.find('team_pokemon', { teamId });
-  const comments = db.find('comments', { teamId });
+  const creator = await db.findOne('users', { id: team.userId });
+  const pokemonList = await db.find('team_pokemon', { teamId });
+  const comments = await db.find('comments', { teamId });
 
   // Enriquecer comentarios con creador
-  const enrichedComments = comments.map(c => {
-    const commentUser = db.findOne('users', { id: c.userId });
+  const enrichedComments = await Promise.all(comments.map(async c => {
+    const commentUser = await db.findOne('users', { id: c.userId });
     return {
       ...c,
       user: commentUser ? { username: commentUser.username, avatar: commentUser.avatar } : null
     };
-  });
+  }));
 
   // Verificar si el usuario actual ya ha votado y/o guardado en favoritos este equipo
   let userRating = null;
   let isFavorited = false;
   if (req.user) {
-    userRating = db.findOne('ratings', { teamId, userId: req.user.id });
-    isFavorited = !!db.findOne('favorites', { teamId, userId: req.user.id });
+    userRating = await db.findOne('ratings', { teamId, userId: req.user.id });
+    isFavorited = !!(await db.findOne('favorites', { teamId, userId: req.user.id }));
   }
 
   res.json({
@@ -246,7 +246,7 @@ router.get('/:id', optionalAuth, (req, res) => {
 });
 
 // POST /api/teams - Crear equipo
-router.post('/', requireAuth, (req, res) => {
+router.post('/', requireAuth, async (req, res) => {
   const { name, regSetId, format, description, tags, pokemon } = req.body;
 
   if (!name || !regSetId || !format || !pokemon || !Array.isArray(pokemon)) {
@@ -269,7 +269,7 @@ router.post('/', requireAuth, (req, res) => {
   }
 
   // Crear registro de equipo
-  const newTeam = db.insert('teams', {
+  const newTeam = await db.insert('teams', {
     userId: req.user.id,
     name,
     regSetId,
@@ -283,8 +283,9 @@ router.post('/', requireAuth, (req, res) => {
   });
 
   // Guardar los 6 Pokémon asociados al equipo
-  pokemon.forEach((p, idx) => {
-    db.insert('team_pokemon', {
+  for (let idx = 0; idx < pokemon.length; idx++) {
+    const p = pokemon[idx];
+    await db.insert('team_pokemon', {
       teamId: newTeam.id,
       slot: idx + 1,
       pokeapiId: p.pokeapiId,
@@ -299,15 +300,15 @@ router.post('/', requireAuth, (req, res) => {
       evs: normalizeEvs(p.evs),
       nature: (p.nature && VALID_NATURES.has(String(p.nature).toLowerCase())) ? p.nature.toLowerCase() : 'hardy'
     });
-  });
+  }
 
   res.status(201).json({ id: newTeam.id, message: 'Equipo publicado correctamente.' });
 });
 
 // PUT /api/teams/:id - Editar un equipo propio
-router.put('/:id', requireAuth, (req, res) => {
+router.put('/:id', requireAuth, async (req, res) => {
   const teamId = req.params.id;
-  const team = db.findOne('teams', { id: teamId });
+  const team = await db.findOne('teams', { id: teamId });
 
   if (!team) {
     return res.status(404).json({ error: 'Equipo no encontrado.' });
@@ -337,7 +338,7 @@ router.put('/:id', requireAuth, (req, res) => {
     return res.status(400).json(validationError);
   }
 
-  db.update('teams', { id: teamId }, {
+  await db.update('teams', { id: teamId }, {
     name,
     regSetId,
     format,
@@ -346,9 +347,10 @@ router.put('/:id', requireAuth, (req, res) => {
   });
 
   // Reemplazar los Pokémon del equipo
-  db.delete('team_pokemon', { teamId });
-  pokemon.forEach((p, idx) => {
-    db.insert('team_pokemon', {
+  await db.delete('team_pokemon', { teamId });
+  for (let idx = 0; idx < pokemon.length; idx++) {
+    const p = pokemon[idx];
+    await db.insert('team_pokemon', {
       teamId,
       slot: idx + 1,
       pokeapiId: p.pokeapiId,
@@ -363,15 +365,15 @@ router.put('/:id', requireAuth, (req, res) => {
       evs: normalizeEvs(p.evs),
       nature: (p.nature && VALID_NATURES.has(String(p.nature).toLowerCase())) ? p.nature.toLowerCase() : 'hardy'
     });
-  });
+  }
 
   res.json({ id: teamId, message: 'Equipo actualizado correctamente.' });
 });
 
 // DELETE /api/teams/:id - Eliminar equipo
-router.delete('/:id', requireAuth, (req, res) => {
+router.delete('/:id', requireAuth, async (req, res) => {
   const teamId = req.params.id;
-  const team = db.findOne('teams', { id: teamId });
+  const team = await db.findOne('teams', { id: teamId });
 
   if (!team) {
     return res.status(404).json({ error: 'Equipo no encontrado.' });
@@ -382,10 +384,10 @@ router.delete('/:id', requireAuth, (req, res) => {
   }
 
   // Eliminar equipo, sus pokémon, ratings y comentarios asociados
-  db.delete('teams', { id: teamId });
-  db.delete('team_pokemon', { teamId });
-  db.delete('ratings', { teamId });
-  db.delete('comments', { teamId });
+  await db.delete('teams', { id: teamId });
+  await db.delete('team_pokemon', { teamId });
+  await db.delete('ratings', { teamId });
+  await db.delete('comments', { teamId });
 
   res.json({ message: 'Equipo eliminado correctamente.' });
 });

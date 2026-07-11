@@ -39,7 +39,7 @@ function signToken(user) {
 }
 
 // Registro
-router.post('/register', (req, res) => {
+router.post('/register', async (req, res) => {
   const { username, email, password, bio, avatar } = req.body;
 
   if (!username || !email || !password) {
@@ -62,17 +62,17 @@ router.post('/register', (req, res) => {
     return res.status(400).json({ error: 'El avatar debe ser una URL http(s) válida.' });
   }
 
-  if (db.findOne('users', { username })) {
+  if (await db.findOne('users', { username })) {
     return res.status(400).json({ error: 'El nombre de usuario ya está registrado.' });
   }
-  if (db.findOne('users', { email })) {
+  if (await db.findOne('users', { email })) {
     return res.status(400).json({ error: 'El email ya está registrado.' });
   }
 
   const salt = bcrypt.genSaltSync(10);
   const passwordHash = bcrypt.hashSync(password, salt);
 
-  const newUser = db.insert('users', {
+  const newUser = await db.insert('users', {
     username,
     email,
     passwordHash,
@@ -86,14 +86,14 @@ router.post('/register', (req, res) => {
 });
 
 // Login
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
     return res.status(400).json({ error: 'Usuario y contraseña son requeridos.' });
   }
 
-  const user = db.findOne('users', { username });
+  const user = await db.findOne('users', { username });
   if (!user || !bcrypt.compareSync(password, user.passwordHash)) {
     return res.status(401).json({ error: 'Credenciales inválidas.' });
   }
@@ -102,8 +102,8 @@ router.post('/login', (req, res) => {
 });
 
 // Obtener sesión actual
-router.get('/me', requireAuth, (req, res) => {
-  const user = db.findOne('users', { id: req.user.id });
+router.get('/me', requireAuth, async (req, res) => {
+  const user = await db.findOne('users', { id: req.user.id });
   if (!user) {
     return res.status(404).json({ error: 'Usuario no encontrado.' });
   }

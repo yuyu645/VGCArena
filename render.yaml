@@ -3,7 +3,7 @@ services:
     name: vgcarena
     env: node
     rootDir: VGCArena
-    plan: starter
+    plan: free
     buildCommand: npm install
     startCommand: npm start
     healthCheckPath: /
@@ -12,9 +12,5 @@ services:
         value: production
       - key: JWT_SECRET
         generateValue: true
-      - key: DB_FILE
-        value: /var/data/db.json
-    disk:
-      name: vgcarena-data
-      mountPath: /var/data
-      sizeGB: 1
+      - key: DATABASE_URL
+        sync: false

@@ -14,22 +14,21 @@ function isValidAvatarUrl(avatar) {
 
 // GET /api/users/favorites/mine - Equipos guardados en favoritos por el usuario autenticado
 // (debe declararse antes de /:username para que "favorites" no se interprete como un username)
-router.get('/favorites/mine', requireAuth, (req, res) => {
-  const favorites = db.find('favorites', { userId: req.user.id });
+router.get('/favorites/mine', requireAuth, async (req, res) => {
+  const favorites = await db.find('favorites', { userId: req.user.id });
 
-  const teams = favorites
-    .map(fav => {
-      const team = db.findOne('teams', { id: fav.teamId });
-      if (!team) return null;
-      const creator = db.findOne('users', { id: team.userId });
-      const pokemonList = db.find('team_pokemon', { teamId: team.id });
-      return {
-        ...team,
-        creator: creator ? { username: creator.username, avatar: creator.avatar } : null,
-        pokemon: pokemonList.sort((a, b) => a.slot - b.slot),
-        favoritedAt: fav.createdAt
-      };
-    })
+  const teams = (await Promise.all(favorites.map(async fav => {
+    const team = await db.findOne('teams', { id: fav.teamId });
+    if (!team) return null;
+    const creator = await db.findOne('users', { id: team.userId });
+    const pokemonList = await db.find('team_pokemon', { teamId: team.id });
+    return {
+      ...team,
+      creator: creator ? { username: creator.username, avatar: creator.avatar } : null,
+      pokemon: pokemonList.sort((a, b) => a.slot - b.slot),
+      favoritedAt: fav.createdAt
+    };
+  })))
     .filter(Boolean)
     .sort((a, b) => new Date(b.favoritedAt) - new Date(a.favoritedAt));
 
@@ -37,26 +36,26 @@ router.get('/favorites/mine', requireAuth, (req, res) => {
 });
 
 // GET /api/users/:username - Perfil público de un entrenador
-router.get('/:username', (req, res) => {
+router.get('/:username', async (req, res) => {
   const username = req.params.username;
-  const user = db.findOne('users', { username });
+  const user = await db.findOne('users', { username });
 
   if (!user) {
     return res.status(404).json({ error: 'Entrenador no encontrado.' });
   }
 
   // Obtener equipos publicados por el usuario
-  let teams = db.find('teams', { userId: user.id });
+  const rawTeams = await db.find('teams', { userId: user.id });
 
   // Enriquecer equipos con pokémon
-  teams = teams.map(team => {
-    const pokemonList = db.find('team_pokemon', { teamId: team.id });
+  const teams = (await Promise.all(rawTeams.map(async team => {
+    const pokemonList = await db.find('team_pokemon', { teamId: team.id });
     return {
       ...team,
       pokemon: pokemonList.sort((a, b) => a.slot - b.slot),
       creator: { username: user.username, avatar: user.avatar }
     };
-  }).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  }))).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
   res.json({
     user: {
@@ -72,7 +71,7 @@ router.get('/:username', (req, res) => {
 });
 
 // PUT /api/users/profile - Editar perfil propio
-router.put('/profile/edit', requireAuth, (req, res) => {
+router.put('/profile/edit', requireAuth, async (req, res) => {
   const { bio, avatar } = req.body;
 
   if (bio !== undefined && bio.length > MAX_BIO_LENGTH) {
@@ -91,9 +90,9 @@ router.put('/profile/edit', requireAuth, (req, res) => {
     return res.status(400).json({ error: 'No se enviaron datos para actualizar.' });
   }
 
-  db.update('users', { id: req.user.id }, updateData);
+  await db.update('users', { id: req.user.id }, updateData);
 
-  const updatedUser = db.findOne('users', { id: req.user.id });
+  const updatedUser = await db.findOne('users', { id: req.user.id });
 
   res.json({
     message: 'Perfil actualizado con éxito.',
@@ -108,7 +107,7 @@ router.put('/profile/edit', requireAuth, (req, res) => {
 });
 
 // POST /api/teams/:id/report - Reportar un equipo
-router.post('/report/:teamId', requireAuth, (req, res) => {
+router.post('/report/:teamId', requireAuth, async (req, res) => {
   const teamId = req.params.teamId;
   const { reason } = req.body;
 
@@ -116,13 +115,13 @@ router.post('/report/:teamId', requireAuth, (req, res) => {
     return res.status(400).json({ error: 'Debes proporcionar una razón para el reporte.' });
   }
 
-  const team = db.findOne('teams', { id: teamId });
+  const team = await db.findOne('teams', { id: teamId });
   if (!team) {
     return res.status(404).json({ error: 'Equipo no encontrado.' });
   }
 
   // Registrar reporte
-  db.insert('reports', {
+  await db.insert('reports', {
     reporterId: req.user.id,
     teamId,
     reason: reason.trim(),
