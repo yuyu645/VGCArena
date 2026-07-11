@@ -62,14 +62,13 @@ profilePage.init = async function(params) {
     });
 
     const editBtnHTML = isSelf 
-      ? `<button class="btn btn-secondary btn-sm" onclick="window.profilePage.openEditModal()" style="margin-top: var(--space-2);">⚙️ Editar Perfil</button>`
+      ? `<button class="btn btn-secondary btn-sm" onclick="window.profilePage.openEditModal()" style="margin-top: var(--space-2);">Editar Perfil</button>`
       : '';
 
     // Renderizar listado de equipos del perfil
     const teamsHTML = data.teams.length === 0
       ? `<div class="card" style="text-align: center; padding: var(--space-8); border-style: dashed;">
-          <span style="font-size: 2.5rem;">🎒</span>
-          <h4 style="margin-top: var(--space-2);">Este entrenador no ha publicado equipos competitivos aún.</h4>
+          <h4>Este entrenador no ha publicado equipos competitivos aún.</h4>
          </div>`
       : `<div class="teams-grid">
           ${data.teams.map((team, idx) => renderTeamCard(team, idx)).join('')}
@@ -78,13 +77,13 @@ profilePage.init = async function(params) {
     container.innerHTML = `
       <div>
         <!-- Panel de Perfil -->
-        <div class="card animate-fade-in" style="background: radial-gradient(circle at 10% 20%, rgba(155, 81, 224, 0.1) 0%, rgba(0, 0, 0, 0) 40%), var(--bg-surface); padding: var(--space-5); margin-bottom: var(--space-6); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-4);">
+        <div class="card card-static animate-fade-in" style="padding: var(--space-5); margin-bottom: var(--space-6); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-4);">
           <div style="display: flex; align-items: center; gap: var(--space-4); flex-wrap: wrap;">
-            <img src="${safeAvatar(profileUser.avatar)}" alt="${escapeHTML(profileUser.username)}" style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--accent-primary); box-shadow: var(--shadow-glow);">
+            <img src="${safeAvatar(profileUser.avatar)}" alt="${escapeHTML(profileUser.username)}" style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--border-strong);">
             <div>
               <h2 style="font-size: 1.75rem; font-weight: 800; display: flex; align-items: center; gap: 8px;">
                 @${escapeHTML(profileUser.username)}
-                <span class="tag-badge" style="background-color: var(--accent-primary); color: #fff; font-size: 0.75rem; font-weight: bold; border: none;">Entrenador</span>
+                <span class="tag-badge" style="background-color: var(--accent-soft); color: var(--accent-secondary); font-size: 0.75rem; font-weight: 600; border-color: var(--border-accent);">Entrenador</span>
               </h2>
               <p style="color: var(--text-tertiary); font-size: 0.8rem; margin-top: 2px;">Miembro desde: ${joinDate}</p>
               <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: var(--space-2); max-width: 500px;">${escapeHTML(profileUser.bio)}</p>
@@ -93,7 +92,7 @@ profilePage.init = async function(params) {
           </div>
           
           <div style="background-color: var(--bg-elevated); border: 1px solid var(--border-default); border-radius: var(--radius-md); padding: var(--space-3) var(--space-5); text-align: center; min-width: 140px;">
-            <div style="font-size: 2.2rem; font-weight: 800; color: var(--accent-secondary); line-height: 1;">🏆 ${profileUser.reputation}</div>
+            <div style="font-size: 2.2rem; font-weight: 800; color: var(--accent-secondary); line-height: 1; font-variant-numeric: tabular-nums;">${profileUser.reputation}</div>
             <div style="font-size: 0.75rem; color: var(--text-tertiary); font-weight: 700; text-transform: uppercase; margin-top: 4px; letter-spacing: 0.05em;">Reputación VGC</div>
           </div>
         </div>
@@ -105,6 +104,17 @@ profilePage.init = async function(params) {
           </h3>
           ${teamsHTML}
         </div>
+
+        ${isSelf ? `
+          <div id="favorites-section" style="margin-top: var(--space-7);">
+            <h3 style="font-size: 1.25rem; margin-bottom: var(--space-4); border-left: 4px solid var(--accent-secondary); padding-left: var(--space-2);">
+              Mis Favoritos
+            </h3>
+            <div id="favorites-container">
+              <div class="skeleton" style="height: 200px; border-radius: var(--radius-lg);"></div>
+            </div>
+          </div>
+        ` : ''}
       </div>
     `;
 
@@ -114,6 +124,7 @@ profilePage.init = async function(params) {
       if (editForm) {
         editForm.addEventListener('submit', saveProfile);
       }
+      loadFavorites();
     }
   } catch (err) {
     console.error('Error al inicializar el perfil:', err);
@@ -138,6 +149,22 @@ window.profilePage = {
     if (modal) modal.classList.remove('active');
   }
 };
+
+async function loadFavorites() {
+  const container = document.getElementById('favorites-container');
+  if (!container) return;
+
+  try {
+    const data = await api.get('/users/favorites/mine');
+    container.innerHTML = data.teams.length === 0
+      ? `<div class="card" style="text-align: center; padding: var(--space-6); border-style: dashed;">
+          <p style="color: var(--text-tertiary);">Aún no has guardado ningún equipo en favoritos.</p>
+         </div>`
+      : `<div class="teams-grid">${data.teams.map((team, idx) => renderTeamCard(team, idx)).join('')}</div>`;
+  } catch (err) {
+    container.innerHTML = `<p style="color: var(--danger); font-size: 0.85rem;">Error al cargar tus favoritos.</p>`;
+  }
+}
 
 async function saveProfile() {
   const avatarInput = document.getElementById('edit-avatar-url');

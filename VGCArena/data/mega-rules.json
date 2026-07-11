@@ -61,5 +61,9 @@
   "mega-eelektross": { "stone": "Eelektrossite", "baseId": 604, "baseName": "eelektross" },
   "mega-pyroar": { "stone": "Pyroarite", "baseId": 668, "baseName": "pyroar" },
   "mega-eternal-floette": { "stone": "Floettite", "baseId": 670, "baseName": "floette" },
-  "mega-garchomp-z": { "stone": "Garchompite", "baseId": 445, "baseName": "garchomp" }
+  "mega-garchomp-z": { "stone": "Garchompite", "baseId": 445, "baseName": "garchomp" },
+  "mega-malamar": { "stone": "Malamarite", "baseId": 687, "baseName": "malamar" },
+  "mega-barbaracle": { "stone": "Barbaracite", "baseId": 689, "baseName": "barbaracle" },
+  "mega-dragalge": { "stone": "Dragalgenite", "baseId": 691, "baseName": "dragalge" },
+  "mega-falinks": { "stone": "Falinksite", "baseId": 870, "baseName": "falinks" }
 }

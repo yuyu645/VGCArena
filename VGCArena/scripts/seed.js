@@ -96,20 +96,20 @@ function runSeeder() {
   // 3. Pokémon asociados a los equipos demo
   const team_pokemon = [
     // Pokémon Equipo 1 (Sun Team con Mega Charizard Y)
-    { id: "tp1", teamId: "t1", slot: 1, pokeapiId: 324, species: "torkoal", item: "Charcoal", ability: "drought", teraType: "Fire", moves: ["eruption", "heat-wave", "solar-beam", "protect"], isShiny: false },
-    { id: "tp2", teamId: "t1", slot: 2, pokeapiId: 3, species: "venusaur", item: "Life Orb", ability: "chlorophyll", teraType: "Grass", moves: ["leaf-storm", "sludge-bomb", "earth-power", "protect"], isShiny: true },
-    { id: "tp3", teamId: "t1", slot: 3, pokeapiId: 10035, species: "mega-charizard-y", item: "Charizardite Y", ability: "drought", teraType: "Fire", moves: ["heat-wave", "air-slash", "solar-beam", "protect"], isShiny: false },
-    { id: "tp4", teamId: "t1", slot: 4, pokeapiId: 727, species: "incineroar", item: "Safety Goggles", ability: "intimidate", teraType: "Ghost", moves: ["fake-out", "flare-blitz", "parting-shot", "knock-off"], isShiny: false },
-    { id: "tp5", teamId: "t1", slot: 5, pokeapiId: 1018, species: "archaludon", item: "Assault Vest", ability: "stamina", teraType: "Steel", moves: ["electro-shot", "flash-cannon", "draco-meteor", "snarl"], isShiny: false },
-    { id: "tp6", teamId: "t1", slot: 6, pokeapiId: 10061, species: "floette-eternal", item: "Choice Specs", ability: "flower-veil", teraType: "Fairy", moves: ["light-of-ruin", "moonblast", "psychic", "dazzling-gleam"], isShiny: false },
+    { id: "tp1", teamId: "t1", slot: 1, pokeapiId: 324, species: "torkoal", types: ["Fire"], item: "Charcoal", ability: "drought", teraType: "Fire", moves: ["eruption", "heat-wave", "solar-beam", "protect"], isShiny: false },
+    { id: "tp2", teamId: "t1", slot: 2, pokeapiId: 3, species: "venusaur", types: ["Grass", "Poison"], item: "Life Orb", ability: "chlorophyll", teraType: "Grass", moves: ["leaf-storm", "sludge-bomb", "earth-power", "protect"], isShiny: true },
+    { id: "tp3", teamId: "t1", slot: 3, pokeapiId: 10035, species: "mega-charizard-y", types: ["Fire", "Flying"], item: "Charizardite Y", ability: "drought", teraType: "Fire", moves: ["heat-wave", "air-slash", "solar-beam", "protect"], isShiny: false },
+    { id: "tp4", teamId: "t1", slot: 4, pokeapiId: 727, species: "incineroar", types: ["Fire", "Dark"], item: "Safety Goggles", ability: "intimidate", teraType: "Ghost", moves: ["fake-out", "flare-blitz", "parting-shot", "knock-off"], isShiny: false },
+    { id: "tp5", teamId: "t1", slot: 5, pokeapiId: 1018, species: "archaludon", types: ["Steel", "Dragon"], item: "Assault Vest", ability: "stamina", teraType: "Steel", moves: ["electro-shot", "flash-cannon", "draco-meteor", "snarl"], isShiny: false },
+    { id: "tp6", teamId: "t1", slot: 6, pokeapiId: 10061, species: "floette-eternal", types: ["Fairy"], item: "Choice Specs", ability: "flower-veil", teraType: "Fairy", moves: ["light-of-ruin", "moonblast", "psychic", "dazzling-gleam"], isShiny: false },
 
     // Pokémon Equipo 2 (Rain Team con Mega Greninja)
-    { id: "tp7", teamId: "t2", slot: 1, pokeapiId: 20003, species: "mega-greninja", item: "Life Orb", ability: "protean", teraType: "Water", moves: ["hydro-pump", "water-shuriken", "dark-pulse", "ice-beam"], isShiny: false },
-    { id: "tp8", teamId: "t2", slot: 2, pokeapiId: 279, species: "pelipper", item: "Focus Sash", ability: "drizzle", teraType: "Ghost", moves: ["hurricane", "scald", "tailwind", "protect"], isShiny: false },
-    { id: "tp9", teamId: "t2", slot: 3, pokeapiId: 20002, species: "mega-excadrill", item: "Assault Vest", ability: "piercing-drill", teraType: "Steel", moves: ["earthquake", "iron-head", "rock-slide", "protect"], isShiny: false },
-    { id: "tp10", teamId: "t2", slot: 4, pokeapiId: 591, species: "amoonguss", item: "Rocky Helmet", ability: "regenerator", teraType: "Grass", moves: ["spore", "rage-powder", "pollen-puff", "protect"], isShiny: true },
-    { id: "tp11", teamId: "t2", slot: 5, pokeapiId: 20004, species: "mega-skarmory", item: "Leftovers", ability: "stalwart", teraType: "Steel", moves: ["brave-bird", "iron-defense", "body-press", "roost"], isShiny: false },
-    { id: "tp12", teamId: "t2", slot: 6, pokeapiId: 887, species: "dragapult", item: "Choice Band", ability: "clear-body", teraType: "Dragon", moves: ["dragon-darts", "phantom-force", "u-turn", "sucker-punch"], isShiny: false }
+    { id: "tp7", teamId: "t2", slot: 1, pokeapiId: 20003, species: "mega-greninja", types: ["Water", "Dark"], item: "Life Orb", ability: "protean", teraType: "Water", moves: ["hydro-pump", "water-shuriken", "dark-pulse", "ice-beam"], isShiny: false },
+    { id: "tp8", teamId: "t2", slot: 2, pokeapiId: 279, species: "pelipper", types: ["Water", "Flying"], item: "Focus Sash", ability: "drizzle", teraType: "Water", moves: ["hurricane", "scald", "tailwind", "protect"], isShiny: false },
+    { id: "tp9", teamId: "t2", slot: 3, pokeapiId: 20002, species: "mega-excadrill", types: ["Ground", "Steel"], item: "Assault Vest", ability: "piercing-drill", teraType: "Steel", moves: ["earthquake", "iron-head", "rock-slide", "protect"], isShiny: false },
+    { id: "tp10", teamId: "t2", slot: 4, pokeapiId: 591, species: "amoonguss", types: ["Grass", "Poison"], item: "Rocky Helmet", ability: "regenerator", teraType: "Grass", moves: ["spore", "rage-powder", "pollen-puff", "protect"], isShiny: true },
+    { id: "tp11", teamId: "t2", slot: 5, pokeapiId: 20004, species: "mega-skarmory", types: ["Steel", "Flying"], item: "Leftovers", ability: "stalwart", teraType: "Steel", moves: ["brave-bird", "iron-defense", "body-press", "roost"], isShiny: false },
+    { id: "tp12", teamId: "t2", slot: 6, pokeapiId: 887, species: "dragapult", types: ["Dragon", "Ghost"], item: "Choice Band", ability: "clear-body", teraType: "Dragon", moves: ["dragon-darts", "phantom-force", "u-turn", "sucker-punch"], isShiny: false }
   ];
 
   // 4. Ratings demo

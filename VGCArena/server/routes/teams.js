@@ -6,11 +6,120 @@ const { requireAuth, optionalAuth } = require('../middleware/auth');
 
 const router = express.Router();
 
+// Los slugs de regulación válidos solo contienen minúsculas, dígitos y guiones
+// (coincide con reg-h, reg-m-b, etc.) — evita path traversal al construir la ruta del archivo.
+const VALID_REG_ID = /^[a-z0-9-]+$/;
+
+const STAT_KEYS = ['hp', 'attack', 'defense', 'special-attack', 'special-defense', 'speed'];
+const MAX_EV_PER_STAT = 32;
+const MAX_EV_TOTAL = 66;
+const VALID_NATURES = new Set([
+  'hardy', 'lonely', 'brave', 'adamant', 'naughty',
+  'bold', 'docile', 'relaxed', 'impish', 'lax',
+  'timid', 'hasty', 'serious', 'jolly', 'naive',
+  'modest', 'mild', 'quiet', 'bashful', 'rash',
+  'calm', 'gentle', 'sassy', 'careful', 'quirky'
+]);
+
 // Helper para validar si un Pokémon es legal en un Regulation Set
 function getRegulationAllowlist(regId) {
+  if (typeof regId !== 'string' || !VALID_REG_ID.test(regId)) return null;
   const regPath = path.join(__dirname, `../../data/regulations/${regId}.json`);
   if (!fs.existsSync(regPath)) return null;
   return JSON.parse(fs.readFileSync(regPath, 'utf-8'));
+}
+
+function loadMegaRules() {
+  try {
+    const megaRulesPath = path.join(__dirname, '../../data/mega-rules.json');
+    return JSON.parse(fs.readFileSync(megaRulesPath, 'utf-8'));
+  } catch (err) {
+    console.error('Error al cargar mega-rules.json:', err);
+    return {};
+  }
+}
+
+function normalizeEvs(rawEvs) {
+  const evs = {};
+  for (const key of STAT_KEYS) {
+    const val = Number(rawEvs && rawEvs[key]);
+    evs[key] = Number.isFinite(val) ? Math.max(0, Math.min(MAX_EV_PER_STAT, Math.floor(val))) : 0;
+  }
+  return evs;
+}
+
+// Valida la lista de 6 Pokémon de un equipo contra las reglas competitivas
+// (allowlist de la regulación, Species/Item Clause, megapiedra obligatoria, EVs).
+// Devuelve { error } si algo falla, o null si todo es válido.
+function validateTeamPokemon(pokemon, allowlist) {
+  const megaRules = loadMegaRules();
+  const speciesList = [];
+  const itemsList = [];
+
+  for (let i = 0; i < pokemon.length; i++) {
+    const p = pokemon[i];
+    if (!p.species || !p.pokeapiId || !p.ability || !p.teraType || !p.moves || !Array.isArray(p.moves)) {
+      return { error: `Datos incompletos para el Pokémon en el slot ${i + 1}.` };
+    }
+
+    if (p.moves.length === 0 || p.moves.length > 4) {
+      return { error: `El Pokémon en el slot ${i + 1} debe tener entre 1 y 4 movimientos.` };
+    }
+
+    if (p.nature !== undefined && !VALID_NATURES.has(String(p.nature).toLowerCase())) {
+      return { error: `Naturaleza inválida para el Pokémon en el slot ${i + 1}.` };
+    }
+
+    if (p.evs !== undefined) {
+      const rawExceedsPerStat = STAT_KEYS.some(key => Number(p.evs[key]) > MAX_EV_PER_STAT);
+      if (rawExceedsPerStat) {
+        return { error: `El Pokémon ${p.species} supera el máximo de ${MAX_EV_PER_STAT} EVs en una sola estadística.` };
+      }
+      const evs = normalizeEvs(p.evs);
+      const total = STAT_KEYS.reduce((sum, key) => sum + evs[key], 0);
+      if (total > MAX_EV_TOTAL) {
+        return { error: `El Pokémon ${p.species} supera el máximo de ${MAX_EV_TOTAL} EVs totales.` };
+      }
+    }
+
+    const speciesLower = p.species.toLowerCase().trim();
+
+    // 1. Validar megapiedra si es un Pokémon Mega
+    const isMega = speciesLower.startsWith('mega-') || !!megaRules[speciesLower];
+    if (isMega) {
+      const rule = megaRules[speciesLower];
+      if (rule) {
+        const equippedItem = (p.item || '').trim().toLowerCase();
+        const requiredStone = rule.stone.toLowerCase();
+        if (equippedItem !== requiredStone) {
+          return { error: `El Pokémon ${p.species.toUpperCase()} requiere tener equipada su megapiedra específica: ${rule.stone}.` };
+        }
+      }
+    }
+
+    // 2. Validar allowlist
+    const isLegal = allowlist.pokemon.some(ap => ap.pokeapiId === p.pokeapiId);
+    if (!isLegal) {
+      return { error: `El Pokémon ${p.species} no es legal en ${allowlist.name}.` };
+    }
+
+    // 3. Comprobar especie duplicada (Species Clause)
+    if (speciesList.includes(speciesLower)) {
+      return { error: `Especie duplicada detectada: ${p.species}. No se permite repetir Pokémon.` };
+    }
+    speciesList.push(speciesLower);
+
+    // 4. Comprobar objetos duplicados (Item Clause) - ignorar si no lleva objeto
+    if (p.item && p.item.trim() !== '') {
+      const itemLower = p.item.toLowerCase().trim();
+      if (itemsList.includes(itemLower)) {
+        return { error: `Objeto duplicado detectado: ${p.item}. No se permite repetir objetos.` };
+      }
+      itemsList.push(itemLower);
+    }
+  }
+
+  return null;
 }
 
 // GET /api/teams - Feed filtrado y paginado
@@ -101,7 +210,8 @@ router.get('/:id', optionalAuth, (req, res) => {
   }
 
   // Incrementar vistas
-  db.update('teams', { id: teamId }, { viewCount: (team.viewCount || 0) + 1 });
+  const updatedViewCount = (team.viewCount || 0) + 1;
+  db.update('teams', { id: teamId }, { viewCount: updatedViewCount });
 
   const creator = db.findOne('users', { id: team.userId });
   const pokemonList = db.find('team_pokemon', { teamId });
@@ -116,19 +226,22 @@ router.get('/:id', optionalAuth, (req, res) => {
     };
   });
 
-  // Verificar si el usuario actual ya ha votado en este equipo
+  // Verificar si el usuario actual ya ha votado y/o guardado en favoritos este equipo
   let userRating = null;
+  let isFavorited = false;
   if (req.user) {
     userRating = db.findOne('ratings', { teamId, userId: req.user.id });
+    isFavorited = !!db.findOne('favorites', { teamId, userId: req.user.id });
   }
 
   res.json({
     ...team,
-    viewCount: (team.viewCount || 0) + 1,
+    viewCount: updatedViewCount,
     creator: creator ? { username: creator.username, avatar: creator.avatar, bio: creator.bio, reputation: creator.reputation } : null,
     pokemon: pokemonList.sort((a, b) => a.slot - b.slot),
     comments: enrichedComments.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)),
-    userRating
+    userRating,
+    isFavorited
   });
 });
 
@@ -150,68 +263,9 @@ router.post('/', requireAuth, (req, res) => {
     return res.status(400).json({ error: 'Regulation Set inválido o no soportado.' });
   }
 
-  // Cargar reglas de Megas
-  let megaRules = {};
-  try {
-    const megaRulesPath = path.join(__dirname, '../../data/mega-rules.json');
-    megaRules = JSON.parse(fs.readFileSync(megaRulesPath, 'utf-8'));
-  } catch (err) {
-    console.error('Error al cargar mega-rules.json:', err);
-  }
-
-  // Validaciones competitivas
-  const speciesList = [];
-  const itemsList = [];
-
-  for (let i = 0; i < pokemon.length; i++) {
-    const p = pokemon[i];
-    if (!p.species || !p.pokeapiId || !p.ability || !p.teraType || !p.moves || !Array.isArray(p.moves)) {
-      return res.status(400).json({ error: `Datos incompletos para el Pokémon en el slot ${i + 1}.` });
-    }
-
-    if (p.moves.length === 0 || p.moves.length > 4) {
-      return res.status(400).json({ error: `El Pokémon en el slot ${i + 1} debe tener entre 1 y 4 movimientos.` });
-    }
-
-    const speciesLower = p.species.toLowerCase().trim();
-
-    // 1. Validar megapiedra si es un Pokémon Mega
-    const megaRule = megaRules[speciesLower] || Object.values(megaRules).find(r => r.baseName === speciesLower);
-    const isMega = speciesLower.startsWith('mega-') || !!megaRules[speciesLower];
-    
-    if (isMega) {
-      const rule = megaRules[speciesLower];
-      if (rule) {
-        const equippedItem = (p.item || '').trim().toLowerCase();
-        const requiredStone = rule.stone.toLowerCase();
-        if (equippedItem !== requiredStone) {
-          return res.status(400).json({ 
-            error: `El Pokémon ${p.species.toUpperCase()} requiere tener equipada su megapiedra específica: ${rule.stone}.` 
-          });
-        }
-      }
-    }
-
-    // 2. Validar allowlist
-    const isLegal = allowlist.pokemon.some(ap => ap.pokeapiId === p.pokeapiId);
-    if (!isLegal) {
-      return res.status(400).json({ error: `El Pokémon ${p.species} no es legal en ${allowlist.name}.` });
-    }
-
-    // 3. Comprobar especie duplicada (Species Clause)
-    if (speciesList.includes(speciesLower)) {
-      return res.status(400).json({ error: `Especie duplicada detectada: ${p.species}. No se permite repetir Pokémon.` });
-    }
-    speciesList.push(speciesLower);
-
-    // 4. Comprobar objetos duplicados (Item Clause) - ignorar si no lleva objeto
-    if (p.item && p.item.trim() !== '') {
-      const itemLower = p.item.toLowerCase().trim();
-      if (itemsList.includes(itemLower)) {
-        return res.status(400).json({ error: `Objeto duplicado detectado: ${p.item}. No se permite repetir objetos.` });
-      }
-      itemsList.push(itemLower);
-    }
+  const validationError = validateTeamPokemon(pokemon, allowlist);
+  if (validationError) {
+    return res.status(400).json(validationError);
   }
 
   // Crear registro de equipo
@@ -235,15 +289,83 @@ router.post('/', requireAuth, (req, res) => {
       slot: idx + 1,
       pokeapiId: p.pokeapiId,
       species: p.species,
+      types: Array.isArray(p.types) ? p.types : [],
       item: p.item || 'Ninguno',
       ability: p.ability,
       teraType: p.teraType,
       moves: p.moves,
-      isShiny: !!p.isShiny
+      isShiny: !!p.isShiny,
+      baseStats: (p.baseStats && typeof p.baseStats === 'object') ? p.baseStats : {},
+      evs: normalizeEvs(p.evs),
+      nature: (p.nature && VALID_NATURES.has(String(p.nature).toLowerCase())) ? p.nature.toLowerCase() : 'hardy'
     });
   });
 
   res.status(201).json({ id: newTeam.id, message: 'Equipo publicado correctamente.' });
+});
+
+// PUT /api/teams/:id - Editar un equipo propio
+router.put('/:id', requireAuth, (req, res) => {
+  const teamId = req.params.id;
+  const team = db.findOne('teams', { id: teamId });
+
+  if (!team) {
+    return res.status(404).json({ error: 'Equipo no encontrado.' });
+  }
+
+  if (team.userId !== req.user.id) {
+    return res.status(403).json({ error: 'No tienes permiso para editar este equipo.' });
+  }
+
+  const { name, regSetId, format, description, tags, pokemon } = req.body;
+
+  if (!name || !regSetId || !format || !pokemon || !Array.isArray(pokemon)) {
+    return res.status(400).json({ error: 'Campos del equipo incompletos.' });
+  }
+
+  if (pokemon.length !== 6) {
+    return res.status(400).json({ error: 'Un equipo competitivo debe tener exactamente 6 Pokémon.' });
+  }
+
+  const allowlist = getRegulationAllowlist(regSetId);
+  if (!allowlist) {
+    return res.status(400).json({ error: 'Regulation Set inválido o no soportado.' });
+  }
+
+  const validationError = validateTeamPokemon(pokemon, allowlist);
+  if (validationError) {
+    return res.status(400).json(validationError);
+  }
+
+  db.update('teams', { id: teamId }, {
+    name,
+    regSetId,
+    format,
+    description: description || '',
+    tags: tags || []
+  });
+
+  // Reemplazar los Pokémon del equipo
+  db.delete('team_pokemon', { teamId });
+  pokemon.forEach((p, idx) => {
+    db.insert('team_pokemon', {
+      teamId,
+      slot: idx + 1,
+      pokeapiId: p.pokeapiId,
+      species: p.species,
+      types: Array.isArray(p.types) ? p.types : [],
+      item: p.item || 'Ninguno',
+      ability: p.ability,
+      teraType: p.teraType,
+      moves: p.moves,
+      isShiny: !!p.isShiny,
+      baseStats: (p.baseStats && typeof p.baseStats === 'object') ? p.baseStats : {},
+      evs: normalizeEvs(p.evs),
+      nature: (p.nature && VALID_NATURES.has(String(p.nature).toLowerCase())) ? p.nature.toLowerCase() : 'hardy'
+    });
+  });
+
+  res.json({ id: teamId, message: 'Equipo actualizado correctamente.' });
 });
 
 // DELETE /api/teams/:id - Eliminar equipo

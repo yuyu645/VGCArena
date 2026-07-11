@@ -5,13 +5,13 @@ async function staffPage() {
   return `
     <div>
       <div style="margin-bottom: var(--space-5);">
-        <h1 style="font-size: 1.85rem;"><span class="text-gradient">Panel de Staff / Moderación</span></h1>
+        <h1 style="font-size: 1.85rem;">Panel de Staff / Moderación</h1>
         <p style="color: var(--text-secondary); font-size: 0.95rem; margin-top: 4px;">Monitorea reportes de la comunidad, audita equipos compartidos y mantén el ecosistema competitivo limpio y saludable.</p>
       </div>
 
       <div class="card" style="padding: var(--space-5);">
         <h3 style="font-size: 1.25rem; margin-bottom: var(--space-4); display: flex; align-items: center; gap: 8px;">
-          <span>🛡️</span> Reportes Pendientes
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.8-3.2 8-7 10-3.8-2-7-5.2-7-10V6z"/></svg> Reportes Pendientes
         </h3>
         
         <div id="reports-list-container">
@@ -39,8 +39,8 @@ async function loadReports() {
     if (pendingReports.length === 0) {
       container.innerHTML = `
         <div style="text-align: center; padding: var(--space-6); color: var(--text-tertiary);">
-          <span style="font-size: 2.5rem;">🎉</span>
-          <h4 style="margin-top: var(--space-2); color: var(--text-secondary);">¡Todo limpio! No hay reportes pendientes de revisión.</h4>
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg>
+          <h4 style="margin-top: var(--space-2); color: var(--text-secondary);">Todo en orden. No hay reportes pendientes de revisión.</h4>
         </div>
       `;
       return;

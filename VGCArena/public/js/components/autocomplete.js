@@ -13,7 +13,7 @@ export function setupAutocomplete(inputElement, suggestionsElement, dataSource, 
       dataSource(val).then(list => renderSuggestions(list, val));
     } else {
       const filteredList = dataSource.filter(item => 
-        item.toLowerCase().includes(val)
+        (typeof item === 'string' ? item : (item.searchText || item.label || item.name || '')).toLowerCase().includes(val)
       );
       renderSuggestions(filteredList, val);
     }
@@ -28,19 +28,21 @@ export function setupAutocomplete(inputElement, suggestionsElement, dataSource, 
     }
 
     suggestionsElement.innerHTML = list.slice(0, 10).map((item, idx) => {
-      const displayItem = typeof item === 'string' ? item : item.name;
-      // Resaltar la coincidencia
-      const index = displayItem.toLowerCase().indexOf(query);
-      let highlighted = displayItem;
-      if (index >= 0) {
-        highlighted = displayItem.substr(0, index) + 
-          "<strong>" + displayItem.substr(index, query.length) + "</strong>" + 
-          displayItem.substr(index + query.length);
-      }
+      const displayItem = typeof item === 'string' ? item : (item.label || item.name);
+      const searchText = typeof item === 'string'
+        ? item
+        : (item.searchText || [item.name, item.label, ...(item.aliases || [])].filter(Boolean).join(' '));
+      const index = displayItem.toLowerCase().indexOf(query) >= 0 ? displayItem.toLowerCase().indexOf(query) : searchText.toLowerCase().indexOf(query);
+      const primary = typeof item === 'string' ? displayItem : (item.displayPrimary || displayItem);
+      const secondary = typeof item === 'string' ? '' : (item.displaySecondary || '');
+      const highlightedPrimary = index >= 0
+        ? primary.substr(0, index) + "<strong>" + primary.substr(index, query.length) + "</strong>" + primary.substr(index + query.length)
+        : primary;
 
       return `
         <div class="suggestion-item" data-index="${idx}" data-value="${displayItem}">
-          ${highlighted}
+          <span class="suggestion-item-main">${highlightedPrimary}</span>
+          ${secondary ? `<span class="suggestion-item-sub">${secondary}</span>` : ''}
         </div>
       `;
     }).join('');

@@ -7,6 +7,16 @@ const { requireAuth } = require('../middleware/auth');
 
 const router = express.Router();
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const MIN_PASSWORD_LENGTH = 8;
+const MAX_BIO_LENGTH = 500;
+
+// Solo permitimos avatares servidos por http(s) para evitar esquemas como
+// javascript:/data: que no tienen sentido como URL de imagen.
+function isValidAvatarUrl(avatar) {
+  return typeof avatar === 'string' && /^https?:\/\//i.test(avatar);
+}
+
 // Da forma al objeto de usuario público (nunca incluye passwordHash).
 function toPublicUser(user) {
   return {
@@ -34,6 +44,22 @@ router.post('/register', (req, res) => {
 
   if (!username || !email || !password) {
     return res.status(400).json({ error: 'Usuario, email y contraseña son requeridos.' });
+  }
+
+  if (!EMAIL_REGEX.test(email)) {
+    return res.status(400).json({ error: 'El formato del email no es válido.' });
+  }
+
+  if (password.length < MIN_PASSWORD_LENGTH) {
+    return res.status(400).json({ error: `La contraseña debe tener al menos ${MIN_PASSWORD_LENGTH} caracteres.` });
+  }
+
+  if (bio && bio.length > MAX_BIO_LENGTH) {
+    return res.status(400).json({ error: `La biografía no puede superar los ${MAX_BIO_LENGTH} caracteres.` });
+  }
+
+  if (avatar && !isValidAvatarUrl(avatar)) {
+    return res.status(400).json({ error: 'El avatar debe ser una URL http(s) válida.' });
   }
 
   if (db.findOne('users', { username })) {

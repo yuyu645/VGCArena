@@ -15,6 +15,7 @@ const routes = [
   { path: '/', view: homePage },
   { path: '/discover', view: discoverPage },
   { path: '/team/new', view: teamBuilderPage, authRequired: true },
+  { path: '/team/:id/edit', view: teamBuilderPage, authRequired: true },
   { path: '/team/:id', view: teamDetailPage },
   { path: '/profile/:username', view: profilePage },
   { path: '/login', view: loginPage },

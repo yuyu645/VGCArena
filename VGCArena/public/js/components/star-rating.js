@@ -16,7 +16,7 @@ const starRating = {
         <!-- Eje 1: Fuerza Competitiva -->
         <div style="margin-bottom: var(--space-4);">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-1);">
-            <span style="font-weight: 600; font-size: 0.9rem;">⚔️ Fuerza Competitiva</span>
+            <span style="font-weight: 600; font-size: 0.9rem;">Fuerza Competitiva</span>
             <span id="strength-score-label" style="font-weight: 700; color: var(--warning);">${initialStrength > 0 ? `${initialStrength}/5` : 'Sin votar'}</span>
           </div>
           <div class="stars-row" id="stars-strength" style="display: flex; gap: var(--space-2); font-size: 1.65rem; cursor: pointer;">
@@ -29,7 +29,7 @@ const starRating = {
         <!-- Eje 2: Originalidad -->
         <div style="margin-bottom: var(--space-4);">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-1);">
-            <span style="font-weight: 600; font-size: 0.9rem;">✨ Originalidad del Meta</span>
+            <span style="font-weight: 600; font-size: 0.9rem;">Originalidad del Meta</span>
             <span id="originality-score-label" style="font-weight: 700; color: var(--accent-secondary);">${initialOriginality > 0 ? `${initialOriginality}/5` : 'Sin votar'}</span>
           </div>
           <div class="stars-row" id="stars-originality" style="display: flex; gap: var(--space-2); font-size: 1.65rem; cursor: pointer;">

@@ -5,6 +5,47 @@ const CACHE_TTL = 7 * 24 * 60 * 60 * 1000; // 7 días
 
 let customPokemonDB = null;
 
+const CUSTOM_BASE_SPECIES_IDS = {
+  'raichu-alola': 26,
+  'ninetales-alola': 38,
+  'arcanine-hisuian': 59,
+  'slowbro-galarian': 80,
+  'tauros-paldean-combat': 128,
+  'tauros-paldean-blaze': 128,
+  'tauros-paldean-aqua': 128,
+  'typhlosion-hisuian': 157,
+  'slowking-galarian': 199,
+  'samurott-hisuian': 503,
+  'zoroark-hisuian': 571,
+  'stunfisk-galarian': 618,
+  'floette-eternal': 670,
+  'meowstic-female': 678,
+  'goodra-hisuian': 706,
+  'avalugg-hisuian': 713,
+  'decidueye-hisuian': 724,
+  'basculegion-female': 902,
+  'mega-venusaur': 3,
+  'mega-charizard-x': 6,
+  'mega-charizard-y': 6,
+  'mega-blastoise': 9,
+  'mega-raichu-x': 26,
+  'mega-raichu-y': 26,
+  'mega-metagross': 376,
+  'mega-sceptile': 254,
+  'mega-blaziken': 257,
+  'mega-swampert': 260,
+  'mega-mawile': 303,
+  'mega-staraptor': 398,
+  'mega-scolipede': 545,
+  'mega-scrafty': 560,
+  'mega-eelektross': 604,
+  'mega-pyroar': 668,
+  'mega-malamar': 687,
+  'mega-barbaracle': 689,
+  'mega-dragalge': 691,
+  'mega-falinks': 870
+};
+
 async function loadCustomPokemonDB() {
   if (customPokemonDB) return customPokemonDB;
   try {
@@ -56,10 +97,22 @@ const pokeapi = {
 
       if (customPoke) {
         console.log(`[Caché VGC] Retornando Pokémon personalizado: ${customPoke.name}`);
+        const baseSpeciesId = CUSTOM_BASE_SPECIES_IDS[customPoke.name];
+        const basePokemon = baseSpeciesId ? await this.get(`/pokemon/${baseSpeciesId}`) : null;
         // Mapear al formato esperado de respuesta de PokéAPI
         return {
           id: customPoke.pokeapiId,
           name: customPoke.name,
+          stats: Array.isArray(basePokemon && basePokemon.stats)
+            ? basePokemon.stats.map(stat => ({
+                base_stat: stat.base_stat,
+                effort: stat.effort,
+                stat: { name: stat.stat.name, url: stat.stat.url }
+              }))
+            : [],
+          baseStats: Array.isArray(basePokemon && basePokemon.stats)
+            ? Object.fromEntries(basePokemon.stats.map(stat => [stat.stat.name, stat.base_stat]))
+            : {},
           abilities: customPoke.abilities.map((a, i) => ({
             ability: { name: a, url: '' },
             is_hidden: false,

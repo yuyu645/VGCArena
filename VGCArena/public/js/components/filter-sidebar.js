@@ -20,9 +20,7 @@ export function renderFilterSidebar(regulations = [], metaConstants = {}, active
     .map(tag => {
       const isActive = tag.id === currentTag;
       return `
-        <button class="tag-badge" 
-                data-tag-id="${tag.id}" 
-                style="cursor: pointer; border: 1px solid ${isActive ? 'var(--accent-primary)' : 'var(--border-subtle)'}; background-color: ${isActive ? 'rgba(155, 81, 224, 0.1)' : 'var(--bg-elevated)'}; color: ${isActive ? 'var(--text-primary)' : 'var(--text-secondary)'}; margin-bottom: 4px; margin-right: 4px;">
+        <button class="tag-badge ${isActive ? 'active' : ''}" data-tag-id="${tag.id}" aria-pressed="${isActive}">
           <span>${tag.icon}</span> <span>${tag.label}</span>
         </button>
       `;
@@ -30,8 +28,8 @@ export function renderFilterSidebar(regulations = [], metaConstants = {}, active
 
   return `
     <aside class="filter-sidebar">
-      <h3 style="font-size: 1.1rem; margin-bottom: var(--space-4); display: flex; align-items: center; gap: 8px;">
-        <span>🔍</span> Filtrar Equipos
+      <h3 class="filter-sidebar-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg> Filtrar Equipos
       </h3>
 
       <!-- Búsqueda General -->
@@ -67,14 +65,14 @@ export function renderFilterSidebar(regulations = [], metaConstants = {}, active
       <!-- Ordenar por -->
       <div class="filter-section">
         <label class="filter-section-title">Ordenar por</label>
-        <div style="display: flex; flex-direction: column; gap: 6px;">
-          <label style="display: flex; align-items: center; gap: var(--space-2); font-size: 0.85rem; cursor: pointer;">
+        <div style="display: flex; flex-direction: column; gap: 2px;">
+          <label class="filter-radio">
             <input type="radio" name="sort-group" value="new" ${currentSort === 'new' ? 'checked' : ''}> Más Reciente
           </label>
-          <label style="display: flex; align-items: center; gap: var(--space-2); font-size: 0.85rem; cursor: pointer;">
+          <label class="filter-radio">
             <input type="radio" name="sort-group" value="popular" ${currentSort === 'popular' ? 'checked' : ''}> Más Vistos (Popular)
           </label>
-          <label style="display: flex; align-items: center; gap: var(--space-2); font-size: 0.85rem; cursor: pointer;">
+          <label class="filter-radio">
             <input type="radio" name="sort-group" value="rating" ${currentSort === 'rating' ? 'checked' : ''}> Mejor Valorados
           </label>
         </div>
@@ -83,7 +81,7 @@ export function renderFilterSidebar(regulations = [], metaConstants = {}, active
       <!-- Estilo de Juego / Tags -->
       <div class="filter-section">
         <label class="filter-section-title">Estilo de Juego</label>
-        <div style="display: flex; flex-wrap: wrap; margin-top: 4px;">
+        <div class="filter-tags">
           ${tagsHTML}
         </div>
       </div>
@@ -147,6 +145,12 @@ export function initFilterListeners(onFilterChange) {
       } else {
         selectedTag = tagId;
       }
+      // Reflejar estado visual activo
+      tagButtons.forEach(b => {
+        const isActive = b.getAttribute('data-tag-id') === selectedTag;
+        b.classList.toggle('active', isActive);
+        b.setAttribute('aria-pressed', String(isActive));
+      });
       triggerChange();
     });
   });
@@ -159,6 +163,10 @@ export function initFilterListeners(onFilterChange) {
       if (pokeInput) pokeInput.value = '';
       if (sortRadios.length) sortRadios[0].checked = true;
       selectedTag = '';
+      tagButtons.forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-pressed', 'false');
+      });
       triggerChange();
     });
   }

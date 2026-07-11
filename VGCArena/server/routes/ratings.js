@@ -23,6 +23,10 @@ router.post('/:id/rate', requireAuth, (req, res) => {
     return res.status(404).json({ error: 'Equipo no encontrado.' });
   }
 
+  if (team.userId === userId) {
+    return res.status(403).json({ error: 'No puedes valorar tu propio equipo.' });
+  }
+
   // Comprobar si ya existe una valoración de este usuario
   const existingRating = db.findOne('ratings', { teamId, userId });
 

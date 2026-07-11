@@ -166,5 +166,33 @@
     "types": ["Dragon", "Ground"],
     "abilities": ["Rough Skin", "Sand Veil"],
     "moves": ["earthquake", "dragon-claw", "swords-dance", "rock-slide", "fire-fang", "protect"]
+  },
+  "mega-malamar": {
+    "pokeapiId": 20025,
+    "name": "mega-malamar",
+    "types": ["Dark", "Psychic"],
+    "abilities": ["Contrary", "Tinted Lens"],
+    "moves": ["psyshock", "superpower", "hypnosis", "night-slash", "knock-off", "trick-room", "protect"]
+  },
+  "mega-barbaracle": {
+    "pokeapiId": 20026,
+    "name": "mega-barbaracle",
+    "types": ["Rock", "Water"],
+    "abilities": ["Tough Claws"],
+    "moves": ["liquidation", "stone-edge", "razor-shell", "shell-smash", "close-combat", "protect"]
+  },
+  "mega-dragalge": {
+    "pokeapiId": 20027,
+    "name": "mega-dragalge",
+    "types": ["Poison", "Dragon"],
+    "abilities": ["Adaptability", "Poison Point"],
+    "moves": ["draco-meteor", "sludge-bomb", "hydro-pump", "focus-blast", "toxic-spikes", "protect"]
+  },
+  "mega-falinks": {
+    "pokeapiId": 20028,
+    "name": "mega-falinks",
+    "types": ["Fighting"],
+    "abilities": ["Defiant", "No Retreat"],
+    "moves": ["close-combat", "first-impression", "iron-head", "swords-dance", "no-retreat", "protect"]
   }
 }

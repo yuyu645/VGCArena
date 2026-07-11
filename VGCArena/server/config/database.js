@@ -1,7 +1,12 @@
 const fs = require('fs');
 const path = require('path');
 
-const DB_FILE = path.join(__dirname, '../../data/db.json');
+// En producción con disco persistente (p. ej. Render), DB_FILE debe apuntar a
+// una ruta fuera del repo (montada en el disco) para no perder los datos en
+// cada redeploy y para no pisar los JSON estáticos versionados en /data.
+const DB_FILE = process.env.DB_FILE
+  ? path.resolve(process.env.DB_FILE)
+  : path.join(__dirname, '../../data/db.json');
 
 // Inicializar la base de datos JSON si no existe
 function initDB() {
@@ -17,7 +22,8 @@ function initDB() {
       team_pokemon: [],
       ratings: [],
       comments: [],
-      reports: []
+      reports: [],
+      favorites: []
     };
     fs.writeFileSync(DB_FILE, JSON.stringify(initialData, null, 2), 'utf-8');
   }

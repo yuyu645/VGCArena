@@ -4,11 +4,13 @@ import { navigateTo } from '../app.js';
 
 async function registerPage() {
   return `
-    <div style="max-width: 460px; margin: var(--space-6) auto 0; width: 100%;">
-      <div class="card animate-fade-in" style="padding: var(--space-6);">
-        <h2 style="font-size: 1.6rem; text-align: center; margin-bottom: var(--space-1);"><span class="text-gradient">Registrarse</span></h2>
-        <p style="color: var(--text-tertiary); font-size: 0.85rem; text-align: center; margin-bottom: var(--space-5);">Únete a la mayor red competitiva de Pokémon Champions</p>
-        
+    <div class="auth-wrapper auth-wrapper-wide">
+      <div class="card card-static auth-card animate-fade-in">
+        <div class="auth-header">
+          <h2>Crea tu cuenta</h2>
+          <p>Únete a la mayor red competitiva de Pokémon Champions</p>
+        </div>
+
         <form id="register-form" onsubmit="event.preventDefault();">
           <div class="form-group">
             <label class="form-label" for="reg-username">Nombre de Entrenador (Usuario)</label>
@@ -35,8 +37,8 @@ async function registerPage() {
           </button>
         </form>
 
-        <p style="font-size: 0.85rem; text-align: center; margin-top: var(--space-4); color: var(--text-secondary);">
-          ¿Ya tienes cuenta? <a href="/login" data-link style="font-weight: 600;">Ingresa aquí</a>
+        <p class="auth-footer">
+          ¿Ya tienes cuenta? <a href="/login" data-link>Ingresa aquí</a>
         </p>
       </div>
     </div>

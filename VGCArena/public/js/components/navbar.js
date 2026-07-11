@@ -17,56 +17,94 @@ const navbar = {
 
     if (isAuth) {
       userSectionHTML = `
-        <div class="user-menu-wrapper" style="position: relative; display: inline-block;">
-          <button id="user-menu-btn" class="btn btn-secondary btn-sm" style="display: flex; align-items: center; gap: 8px;">
-            <img src="${safeAvatar(user.avatar)}" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%;">
+        <div class="user-menu-wrapper">
+          <button id="user-menu-btn" class="btn btn-secondary btn-sm" aria-haspopup="true" aria-expanded="false">
+            <img src="${safeAvatar(user.avatar)}" alt="" class="user-avatar">
             <span>${escapeHTML(user.username)}</span>
-            <span style="font-size: 0.7rem; color: var(--text-tertiary);">▼</span>
+            <span aria-hidden="true" style="font-size: 0.6rem; color: var(--text-tertiary);">▼</span>
           </button>
-          <div id="user-dropdown" class="card" style="display: none; position: absolute; top: 110%; right: 0; min-width: 180px; z-index: 150; padding: var(--space-2); background-color: var(--bg-elevated); box-shadow: var(--shadow-lg);">
-            <a href="/profile/${encodeURIComponent(user.username)}" data-link class="nav-dropdown-item" style="display: block; padding: var(--space-2); font-weight: 500; border-radius: var(--radius-sm);">Mi Perfil</a>
-            <a href="/team/new" data-link class="nav-dropdown-item" style="display: block; padding: var(--space-2); font-weight: 500; border-radius: var(--radius-sm);">Publicar Equipo</a>
-            ${isStaff ? `<a href="/staff" data-link class="nav-dropdown-item" style="display: block; padding: var(--space-2); font-weight: 500; border-radius: var(--radius-sm); color: var(--warning);">Panel Staff</a>` : ''}
-            <hr style="border: 0; border-top: 1px solid var(--border-subtle); margin: var(--space-1) 0;">
-            <button id="logout-btn" style="width: 100%; text-align: left; background: none; border: none; cursor: pointer; color: var(--danger); display: block; padding: var(--space-2); font-weight: 500; border-radius: var(--radius-sm);">Cerrar Sesión</button>
+          <div id="user-dropdown" class="user-dropdown" style="display: none;">
+            <a href="/profile/${encodeURIComponent(user.username)}" data-link class="nav-dropdown-item">Mi Perfil</a>
+            <a href="/team/new" data-link class="nav-dropdown-item">Publicar Equipo</a>
+            ${isStaff ? `<a href="/staff" data-link class="nav-dropdown-item" style="color: var(--warning);">Panel Staff</a>` : ''}
+            <hr class="nav-dropdown-divider">
+            <button id="logout-btn" class="nav-dropdown-danger">Cerrar Sesión</button>
           </div>
         </div>
       `;
     }
 
     navbarRoot.innerHTML = `
-      <nav class="navbar">
+      <nav class="navbar" aria-label="Navegación principal">
         <div class="container nav-container">
-          <a href="/" data-link class="logo">
-            <span class="text-gradient" style="font-weight: 800;">VGC</span><span>ARENA</span>
+          <a href="/" data-link class="logo" aria-label="VGC Arena — Inicio">
+            <span class="logo-mark" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6"/><path d="M15 12h6"/><circle cx="12" cy="12" r="3"/></svg>
+            </span>
+            <span>VGC</span><span>ARENA</span>
           </a>
-          <div class="nav-links">
+          <div class="nav-links" id="nav-links">
             <a href="/" data-link class="nav-link ${location.pathname === '/' ? 'active' : ''}">Feed</a>
             <a href="/discover" data-link class="nav-link ${location.pathname === '/discover' ? 'active' : ''}">Descubrir</a>
             <a href="/about" data-link class="nav-link ${location.pathname === '/about' ? 'active' : ''}">Info</a>
             ${isAuth ? `<a href="/team/new" data-link class="nav-link ${location.pathname === '/team/new' ? 'active' : ''}">Nuevo Equipo</a>` : ''}
             ${isStaff ? `<a href="/staff" data-link class="nav-link ${location.pathname === '/staff' ? 'active' : ''}">Staff</a>` : ''}
+            ${!isAuth ? `
+              <a href="/login" data-link class="nav-link nav-link-mobile ${location.pathname === '/login' ? 'active' : ''}">Ingresar</a>
+              <a href="/register" data-link class="nav-link nav-link-mobile ${location.pathname === '/register' ? 'active' : ''}">Registrarse</a>
+            ` : ''}
           </div>
-          <div style="display: flex; align-items: center; gap: var(--space-3);">
+          <div class="nav-actions">
             ${userSectionHTML}
+            <button id="nav-toggle" class="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Abrir menú de navegación">
+              <span class="nav-toggle-bar"></span>
+              <span class="nav-toggle-bar"></span>
+              <span class="nav-toggle-bar"></span>
+            </button>
           </div>
         </div>
       </nav>
     `;
 
+    // Menú móvil (hamburguesa)
+    const navToggle = document.getElementById('nav-toggle');
+    const navLinks = document.getElementById('nav-links');
+    if (navToggle && navLinks) {
+      navToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = navLinks.classList.toggle('open');
+        navToggle.setAttribute('aria-expanded', String(isOpen));
+      });
+
+      // Cerrar al navegar o hacer click fuera
+      navLinks.addEventListener('click', (e) => {
+        if (e.target.closest('[data-link]')) {
+          navLinks.classList.remove('open');
+          navToggle.setAttribute('aria-expanded', 'false');
+        }
+      });
+      document.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        navToggle.setAttribute('aria-expanded', 'false');
+      });
+    }
+
     // Hook events
     if (isAuth) {
       const menuBtn = document.getElementById('user-menu-btn');
       const dropdown = document.getElementById('user-dropdown');
-      
+
       if (menuBtn && dropdown) {
         menuBtn.addEventListener('click', (e) => {
           e.stopPropagation();
-          dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+          const willOpen = dropdown.style.display === 'none';
+          dropdown.style.display = willOpen ? 'block' : 'none';
+          menuBtn.setAttribute('aria-expanded', String(willOpen));
         });
 
         document.addEventListener('click', () => {
           dropdown.style.display = 'none';
+          menuBtn.setAttribute('aria-expanded', 'false');
         });
       }
 

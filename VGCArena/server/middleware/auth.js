@@ -21,7 +21,7 @@ function requireStaff(req, res, next) {
   requireAuth(req, res, () => {
     const db = require('../config/database');
     const user = db.findOne('users', { id: req.user.id });
-    if (!user || user.role !== 'staff') {
+    if (!user || (user.role !== 'staff' && user.role !== 'admin')) {
       return res.status(403).json({ error: 'Acceso denegado. Privilegios de Staff requeridos.' });
     }
     next();

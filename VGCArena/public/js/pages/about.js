@@ -1,8 +1,8 @@
 async function aboutPage() {
   return `
     <div style="max-width: 800px; margin: var(--space-6) auto 0; width: 100%;">
-      <div class="card animate-fade-in" style="padding: var(--space-6);">
-        <h1 style="font-size: 2rem; margin-bottom: var(--space-3); text-align: center;"><span class="text-gradient">Acerca de VGC Arena</span></h1>
+      <div class="card card-static animate-fade-in" style="padding: var(--space-6);">
+        <h1 style="font-size: 2rem; margin-bottom: var(--space-3); text-align: center;">Acerca de VGC Arena</h1>
         
         <p style="font-size: 1rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: var(--space-4); text-align: center;">
           VGC Arena es una plataforma web independiente construida para los entusiastas de las batallas competitivas de Pokémon Champions (VGC).
@@ -11,8 +11,8 @@ async function aboutPage() {
         <div style="border-top: 1px solid var(--border-subtle); padding-top: var(--space-4); margin-bottom: var(--space-4);">
           <h3 style="font-size: 1.25rem; margin-bottom: var(--space-2); color: var(--text-primary);">Aviso Legal y de Derechos</h3>
           <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6;">
-            Este es un proyecto **completamente gratuito y sin fines de lucro** creado por fanáticos de Pokémon. 
-            Esta plataforma **NO** está afiliada, respaldada, patrocinada ni asociada en ninguna forma con Nintendo, Game Freak, The Pokémon Company o Creatures Inc.
+            Este es un proyecto <strong>completamente gratuito y sin fines de lucro</strong> creado por fanáticos de Pokémon.
+            Esta plataforma <strong>no</strong> está afiliada, respaldada, patrocinada ni asociada en ninguna forma con Nintendo, Game Freak, The Pokémon Company o Creatures Inc.
           </p>
           <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin-top: 8px;">
             Las marcas comerciales, personajes, nombres de especies, sprites, sonidos y materiales conceptuales asociados a Pokémon son propiedad exclusiva de sus respectivos dueños.

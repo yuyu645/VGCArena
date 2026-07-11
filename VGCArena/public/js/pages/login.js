@@ -4,11 +4,13 @@ import { navigateTo } from '../app.js';
 
 async function loginPage() {
   return `
-    <div style="max-width: 420px; margin: var(--space-8) auto 0; width: 100%;">
-      <div class="card animate-fade-in" style="padding: var(--space-6);">
-        <h2 style="font-size: 1.6rem; text-align: center; margin-bottom: var(--space-1);"><span class="text-gradient">Bienvenido de Vuelta</span></h2>
-        <p style="color: var(--text-tertiary); font-size: 0.85rem; text-align: center; margin-bottom: var(--space-5);">Ingresa tus credenciales para acceder a VGC Arena</p>
-        
+    <div class="auth-wrapper">
+      <div class="card card-static auth-card animate-fade-in">
+        <div class="auth-header">
+          <h2>Bienvenido de vuelta</h2>
+          <p>Ingresa tus credenciales para acceder a VGC Arena</p>
+        </div>
+
         <form id="login-form" onsubmit="event.preventDefault();">
           <div class="form-group">
             <label class="form-label" for="login-username">Nombre de Entrenador (Usuario)</label>
@@ -25,8 +27,8 @@ async function loginPage() {
           </button>
         </form>
 
-        <p style="font-size: 0.85rem; text-align: center; margin-top: var(--space-4); color: var(--text-secondary);">
-          ¿No tienes cuenta? <a href="/register" data-link style="font-weight: 600;">Regístrate aquí</a>
+        <p class="auth-footer">
+          ¿No tienes cuenta? <a href="/register" data-link>Regístrate aquí</a>
         </p>
       </div>
     </div>

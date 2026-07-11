@@ -4,6 +4,38 @@ const { requireAuth } = require('../middleware/auth');
 
 const router = express.Router();
 
+const MAX_BIO_LENGTH = 500;
+
+// Solo permitimos avatares servidos por http(s) para evitar esquemas como
+// javascript:/data: que no tienen sentido como URL de imagen.
+function isValidAvatarUrl(avatar) {
+  return typeof avatar === 'string' && /^https?:\/\//i.test(avatar);
+}
+
+// GET /api/users/favorites/mine - Equipos guardados en favoritos por el usuario autenticado
+// (debe declararse antes de /:username para que "favorites" no se interprete como un username)
+router.get('/favorites/mine', requireAuth, (req, res) => {
+  const favorites = db.find('favorites', { userId: req.user.id });
+
+  const teams = favorites
+    .map(fav => {
+      const team = db.findOne('teams', { id: fav.teamId });
+      if (!team) return null;
+      const creator = db.findOne('users', { id: team.userId });
+      const pokemonList = db.find('team_pokemon', { teamId: team.id });
+      return {
+        ...team,
+        creator: creator ? { username: creator.username, avatar: creator.avatar } : null,
+        pokemon: pokemonList.sort((a, b) => a.slot - b.slot),
+        favoritedAt: fav.createdAt
+      };
+    })
+    .filter(Boolean)
+    .sort((a, b) => new Date(b.favoritedAt) - new Date(a.favoritedAt));
+
+  res.json({ teams });
+});
+
 // GET /api/users/:username - Perfil público de un entrenador
 router.get('/:username', (req, res) => {
   const username = req.params.username;
@@ -42,6 +74,14 @@ router.get('/:username', (req, res) => {
 // PUT /api/users/profile - Editar perfil propio
 router.put('/profile/edit', requireAuth, (req, res) => {
   const { bio, avatar } = req.body;
+
+  if (bio !== undefined && bio.length > MAX_BIO_LENGTH) {
+    return res.status(400).json({ error: `La biografía no puede superar los ${MAX_BIO_LENGTH} caracteres.` });
+  }
+
+  if (avatar !== undefined && avatar !== '' && !isValidAvatarUrl(avatar)) {
+    return res.status(400).json({ error: 'El avatar debe ser una URL http(s) válida.' });
+  }
 
   const updateData = {};
   if (bio !== undefined) updateData.bio = bio;

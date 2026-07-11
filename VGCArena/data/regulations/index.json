@@ -1,7 +1,7 @@
 {
-  "version": "1.0.0",
-  "lastUpdated": "2026-07-09",
-  "currentRegSet": "reg-h",
+  "version": "1.1.0",
+  "lastUpdated": "2026-07-10",
+  "currentRegSet": "reg-m-b",
   "regulations": [
     {
       "id": "reg-h",
@@ -9,8 +9,18 @@
       "season": "VGC 2024 Reg H",
       "startDate": "2024-09-01",
       "endDate": "2025-01-01",
-      "active": true,
+      "active": false,
       "description": "Formato sin Pokémon Legendarios mayores ni de Paradoja. Los Pokémon de la lista permitida son legales."
+    },
+    {
+      "id": "reg-m-b",
+      "name": "Regulation M-B",
+      "season": "Pokemon Champions Reg M-B",
+      "startDate": "2026-06-16",
+      "endDate": "2026-09-01",
+      "active": true,
+      "dataIncomplete": true,
+      "description": "Formato de Pokemon Champions. Solo un listado parcial de Pokémon legales está cargado (datos incompletos de origen); Reshiram y Zekrom son legales como restrictos, y Eternatus, Zacian, Zamazenta, Calyrex, los tesoros de Treasures of Ruin y los Paradoja de portada están baneados."
     }
   ]
 }

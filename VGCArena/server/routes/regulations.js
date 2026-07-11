@@ -4,6 +4,10 @@ const path = require('path');
 
 const router = express.Router();
 
+// Los slugs de regulación válidos solo contienen minúsculas, dígitos y guiones
+// (coincide con reg-h, reg-m-b, etc.) — evita path traversal al construir la ruta del archivo.
+const VALID_REG_ID = /^[a-z0-9-]+$/;
+
 // Rutas a archivos JSON
 const REGS_INDEX = path.join(__dirname, '../../data/regulations/index.json');
 const ITEMS_FILE = path.join(__dirname, '../../data/items.json');
@@ -23,6 +27,11 @@ router.get('/', (req, res) => {
 // Obtener una regulación específica (con allowlist de Pokémon)
 router.get('/:id', (req, res) => {
   const regId = req.params.id;
+
+  if (!VALID_REG_ID.test(regId)) {
+    return res.status(400).json({ error: 'Regulation Set inválido.' });
+  }
+
   const regPath = path.join(__dirname, `../../data/regulations/${regId}.json`);
 
   if (!fs.existsSync(regPath)) {

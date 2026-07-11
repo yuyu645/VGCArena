@@ -17,14 +17,14 @@ async function homePage(params) {
   return `
     <div>
       <!-- Hero Banner VGC Arena -->
-      <section style="background: radial-gradient(circle at 80% 20%, rgba(155, 81, 224, 0.15) 0%, rgba(0, 0, 0, 0) 60%), var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); padding: var(--space-6) var(--space-5); margin-bottom: var(--space-6); position: relative; overflow: hidden; display: flex; align-items: center; min-height: 220px;">
-        <div style="max-width: 600px; z-index: 2;">
-          <span style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--accent-secondary); letter-spacing: 0.05em; display: inline-block; margin-bottom: var(--space-1);">Comunidad VGC Pokémon Champions</span>
-          <h1 style="font-size: 2.2rem; font-weight: 800; line-height: 1.1; margin-bottom: var(--space-2);"><span class="text-gradient">Encuentra y comparte</span> equipos ganadores</h1>
-          <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: var(--space-4);">Publica tus estrategias, recibe valoraciones de entrenadores expertos y descubre el meta para llegar a Master Ball.</p>
-          <div style="display: flex; gap: var(--space-2);">
-            <a href="/team/new" data-link class="btn btn-primary">Crear Equipo</a>
-            <a href="/discover" data-link class="btn btn-secondary">Explorar Meta</a>
+      <section class="hero animate-fade-in">
+        <div class="hero-content">
+          <span class="hero-eyebrow">Comunidad competitiva VGC</span>
+          <h1>Equipos ganadores,<br>compartidos por quienes los juegan</h1>
+          <p class="hero-subtitle">Publica tus composiciones, recibe valoraciones de otros entrenadores y sigue de cerca el meta de cada regulación.</p>
+          <div class="hero-actions">
+            <a href="/team/new" data-link class="btn btn-primary">Publicar un equipo</a>
+            <a href="/discover" data-link class="btn btn-secondary">Explorar el meta</a>
           </div>
         </div>
       </section>
@@ -38,9 +38,9 @@ async function homePage(params) {
 
         <!-- Feed Content -->
         <div>
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
-            <h2 style="font-size: 1.35rem; font-weight: 700; border-left: 4px solid var(--accent-primary); padding-left: var(--space-2);">Equipos Compartidos</h2>
-            <span id="teams-count" style="font-size: 0.85rem; color: var(--text-tertiary);">Cargando...</span>
+          <div class="section-header">
+            <h2 class="section-title">Equipos Compartidos</h2>
+            <span id="teams-count" class="section-count">Cargando...</span>
           </div>
 
           <div id="feed-teams-list">
@@ -104,11 +104,13 @@ async function loadFeed() {
 
     if (data.teams.length === 0) {
       feedList.innerHTML = `
-        <div class="card" style="text-align: center; padding: var(--space-8); border-style: dashed;">
-          <span style="font-size: 3rem;">🏜️</span>
-          <h3 style="margin-top: var(--space-3); font-size: 1.25rem;">No se encontraron equipos</h3>
-          <p style="color: var(--text-tertiary); margin-top: var(--space-2); font-size: 0.9rem;">Prueba limpiando los filtros o busca un término diferente.</p>
-          <button id="reset-feed-filters" class="btn btn-secondary btn-sm" style="margin-top: var(--space-4);">Limpiar Filtros</button>
+        <div class="empty-state animate-fade-in">
+          <span class="empty-state-icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+          </span>
+          <h3>No se encontraron equipos</h3>
+          <p>Prueba limpiando los filtros o busca un término diferente.</p>
+          <button id="reset-feed-filters" class="btn btn-secondary btn-sm">Limpiar Filtros</button>
         </div>
       `;
       

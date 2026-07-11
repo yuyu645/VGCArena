@@ -14,9 +14,9 @@ let activeFilters = {
 async function discoverPage(params) {
   return `
     <div>
-      <div style="margin-bottom: var(--space-5);">
-        <h1 style="font-size: 1.85rem;"><span class="text-gradient">Explorar Meta VGC</span></h1>
-        <p style="color: var(--text-secondary); font-size: 0.95rem; margin-top: 4px;">Usa los filtros avanzados para encontrar los equipos con mejores puntuaciones o que incluyan a tus Pokémon favoritos.</p>
+      <div class="page-header animate-fade-in">
+        <h1>Explorar el meta VGC</h1>
+        <p>Usa los filtros avanzados para encontrar los equipos con mejores puntuaciones o que incluyan a tus Pokémon favoritos.</p>
       </div>
 
       <div class="home-layout">
@@ -27,9 +27,9 @@ async function discoverPage(params) {
 
         <!-- Resultados -->
         <div>
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
-            <h3 style="font-size: 1.2rem; font-weight: 700;">Equipos competitivos</h3>
-            <span id="discover-count" style="font-size: 0.85rem; color: var(--text-tertiary);">Cargando...</span>
+          <div class="section-header">
+            <h3 class="section-title">Equipos competitivos</h3>
+            <span id="discover-count" class="section-count">Cargando...</span>
           </div>
 
           <div id="discover-teams-list">
@@ -84,10 +84,12 @@ async function loadDiscover() {
 
     if (data.teams.length === 0) {
       listEl.innerHTML = `
-        <div class="card" style="text-align: center; padding: var(--space-8); border-style: dashed;">
-          <span style="font-size: 3rem;">🔍</span>
-          <h3 style="margin-top: var(--space-3); font-size: 1.25rem;">Sin resultados</h3>
-          <p style="color: var(--text-tertiary); margin-top: var(--space-2); font-size: 0.9rem;">Prueba con otros términos o reduce los filtros.</p>
+        <div class="empty-state animate-fade-in">
+          <span class="empty-state-icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+          </span>
+          <h3>Sin resultados</h3>
+          <p>Prueba con otros términos o reduce los filtros.</p>
         </div>
       `;
       return;
