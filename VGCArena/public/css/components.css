@@ -9,7 +9,7 @@
   left: 0;
   width: 100%;
   height: 72px;
-  background-color: hsla(0, 0%, 100%, 0.88);
+  background-color: hsla(240, 30%, 8%, 0.86);
   -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--border-subtle);
@@ -52,7 +52,7 @@
   color: var(--text-on-accent);
   font-size: 1rem;
   font-weight: 800;
-  box-shadow: 0 2px 8px hsla(224, 76%, 48%, 0.30);
+  box-shadow: 0 2px 10px var(--accent-glow);
 }
 
 .logo span:last-child { font-weight: 400; color: var(--text-secondary); }
@@ -216,11 +216,13 @@
     align-items: stretch;
     gap: var(--space-1);
     padding: var(--space-3) var(--space-4) var(--space-4);
-    background-color: hsla(0, 0%, 100%, 0.98);
-    -webkit-backdrop-filter: blur(14px);
-    backdrop-filter: blur(14px);
+    background-color: var(--bg-surface);
     border-bottom: 1px solid var(--border-subtle);
     box-shadow: var(--shadow-lg);
+    z-index: 99;
+    overflow-y: auto;
+    height: fit-content;
+    max-height: calc(100vh - 72px);
     display: none;
   }
 
@@ -273,8 +275,8 @@
 .btn-primary {
   background: var(--accent-gradient);
   color: var(--text-on-accent);
-  box-shadow: inset 0 1px 0 hsla(0, 0%, 100%, 0.16),
-              0 1px 3px hsla(224, 76%, 40%, 0.30);
+  box-shadow: inset 0 1px 0 hsla(0, 0%, 100%, 0.18),
+              0 1px 3px hsla(18, 95%, 40%, 0.40);
 }
 
 .btn-primary:hover {
@@ -497,7 +499,7 @@ button.tag-badge:hover {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: hsla(222, 35%, 13%, 0.45);
+  background-color: hsla(240, 45%, 4%, 0.70);
   -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
   display: flex;

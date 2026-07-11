@@ -31,7 +31,7 @@ async function teamBuilderPage(params) {
         <div class="card" style="margin-bottom: var(--space-5); display: flex; flex-direction: column; gap: var(--space-4);">
           <h3 style="font-size: 1.2rem; border-left: 4px solid var(--accent-primary); padding-left: var(--space-2);">1. Información General</h3>
           
-          <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: var(--space-4);">
+          <div class="builder-info-row">
             <div class="form-group" style="margin-bottom: 0;">
               <label class="form-label">Nombre del Equipo</label>
               <input type="text" id="team-name" class="form-input" placeholder="Ej. Rain Offense Reg H, Trick Room Stall..." required>

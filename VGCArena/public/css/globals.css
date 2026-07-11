@@ -8,6 +8,15 @@ html {
 
 body {
   background-color: var(--bg-void);
+  /* Atmósfera de arena: resplandores tenues naranja/cian sobre el vacío */
+  background-image:
+    radial-gradient(900px 480px at 85% -10%, hsla(24, 96%, 53%, 0.07), transparent 60%),
+    radial-gradient(700px 420px at 8% 12%, hsla(190, 90%, 55%, 0.05), transparent 60%),
+    radial-gradient(2px 2px at 22% 34%, hsla(0, 0%, 100%, 0.10), transparent 100%),
+    radial-gradient(2px 2px at 68% 58%, hsla(0, 0%, 100%, 0.07), transparent 100%),
+    radial-gradient(2px 2px at 42% 80%, hsla(0, 0%, 100%, 0.08), transparent 100%),
+    radial-gradient(2px 2px at 88% 26%, hsla(0, 0%, 100%, 0.06), transparent 100%);
+  background-attachment: fixed;
   color: var(--text-secondary);
   font-family: var(--font-body);
   overflow-x: hidden;
@@ -24,7 +33,7 @@ main#app {
 }
 
 ::selection {
-  background: hsla(224, 76%, 48%, 0.16);
+  background: hsla(24, 96%, 53%, 0.30);
   color: var(--text-primary);
 }
 
@@ -107,6 +116,11 @@ a:hover {
 
 @media (max-width: 640px) {
   .container { padding: 0 var(--space-4); }
+}
+
+/* Bloquea el scroll de fondo mientras el menú móvil está abierto */
+body.nav-open {
+  overflow: hidden;
 }
 
 .text-gradient {

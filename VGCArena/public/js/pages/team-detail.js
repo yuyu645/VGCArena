@@ -202,7 +202,7 @@ teamDetailPage.init = async function(params) {
         </div>
 
         <!-- Layout Doble -->
-        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: var(--space-6);">
+        <div class="team-detail-layout">
           <div>
             <h3 style="font-size: 1.25rem; margin-bottom: var(--space-4); border-left: 4px solid var(--accent-primary); padding-left: var(--space-2);">Alineación del Equipo</h3>
             <div style="display: flex; flex-direction: column; gap: var(--space-4);">

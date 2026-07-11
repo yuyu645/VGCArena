@@ -20,7 +20,7 @@ async function homePage(params) {
       <section class="hero animate-fade-in">
         <div class="hero-content">
           <span class="hero-eyebrow">Comunidad competitiva VGC</span>
-          <h1>Equipos ganadores,<br>compartidos por quienes los juegan</h1>
+          <h1>Equipos ganadores,<br><span class="text-gradient">compartidos por quienes los juegan</span></h1>
           <p class="hero-subtitle">Publica tus composiciones, recibe valoraciones de otros entrenadores y sigue de cerca el meta de cada regulación.</p>
           <div class="hero-actions">
             <a href="/team/new" data-link class="btn btn-primary">Publicar un equipo</a>

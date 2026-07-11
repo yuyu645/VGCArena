@@ -74,6 +74,7 @@ const navbar = {
         e.stopPropagation();
         const isOpen = navLinks.classList.toggle('open');
         navToggle.setAttribute('aria-expanded', String(isOpen));
+        document.body.classList.toggle('nav-open', isOpen);
       });
 
       // Cerrar al navegar o hacer click fuera
@@ -81,11 +82,13 @@ const navbar = {
         if (e.target.closest('[data-link]')) {
           navLinks.classList.remove('open');
           navToggle.setAttribute('aria-expanded', 'false');
+          document.body.classList.remove('nav-open');
         }
       });
       document.addEventListener('click', () => {
         navLinks.classList.remove('open');
         navToggle.setAttribute('aria-expanded', 'false');
+        document.body.classList.remove('nav-open');
       });
     }
 

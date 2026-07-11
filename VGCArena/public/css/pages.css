@@ -12,10 +12,12 @@
   padding: var(--space-7) var(--space-6);
   margin-bottom: var(--space-6);
   border-radius: var(--radius-xl);
+  border: 1px solid hsla(24, 96%, 53%, 0.25);
   background:
-    radial-gradient(760px 340px at 92% -30%, hsla(218, 80%, 55%, 0.35), transparent 65%),
-    linear-gradient(135deg, hsl(226, 55%, 16%) 0%, hsl(224, 52%, 22%) 100%);
-  box-shadow: var(--shadow-md);
+    radial-gradient(760px 340px at 92% -30%, hsla(24, 96%, 53%, 0.30), transparent 65%),
+    radial-gradient(560px 300px at 0% 115%, hsla(190, 90%, 55%, 0.14), transparent 60%),
+    linear-gradient(135deg, hsl(245, 40%, 10%) 0%, hsl(235, 38%, 15%) 100%);
+  box-shadow: var(--shadow-md), 0 0 40px hsla(24, 96%, 53%, 0.10);
 }
 
 .hero-content {
@@ -33,7 +35,7 @@
   font-family: var(--font-display);
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: hsl(218, 85%, 75%);
+  color: hsl(24, 96%, 66%);
   margin-bottom: var(--space-4);
 }
 
@@ -42,7 +44,7 @@
   width: 18px;
   height: 2px;
   border-radius: var(--radius-pill);
-  background: hsl(218, 85%, 62%);
+  background: hsl(24, 96%, 53%);
 }
 
 .hero h1 {
@@ -54,7 +56,7 @@
 }
 
 .hero-subtitle {
-  color: hsl(220, 30%, 82%);
+  color: hsl(240, 20%, 80%);
   font-size: 1rem;
   line-height: 1.6;
   max-width: 52ch;
@@ -312,6 +314,18 @@
   }
 }
 
+.builder-info-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: var(--space-4);
+}
+
+@media (max-width: 640px) {
+  .builder-info-row {
+    grid-template-columns: 1fr;
+  }
+}
+
 .builder-card-slot {
   background-color: var(--bg-surface);
   border: 2px dashed var(--border-default);
@@ -452,6 +466,32 @@
 .detail-pokemon-card .meta-info {
   flex: 1;
   min-width: 0;
+}
+
+/* Layout de dos columnas del detalle (alineación + valoraciones) */
+.team-detail-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--space-6);
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .team-detail-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* En pantallas estrechas el sprite pasa arriba y la info debajo */
+@media (max-width: 520px) {
+  .detail-pokemon-card {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .detail-pokemon-card .meta-info {
+    width: 100%;
+  }
 }
 
 /* ── Comentarios ── */

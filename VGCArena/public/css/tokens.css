@@ -1,46 +1,47 @@
 /* ═══════════════════════════════════════════════════
    VGC ARENA — CSS Design Tokens
-   Dirección visual: "Pro Circuit"
-   Tema claro editorial · azul profundo · alto contraste
+   Dirección visual: "Arena Nocturna"
+   Tema oscuro gaming · naranja competitivo · cian eléctrico
+   (inspirado en plataformas de torneos tipo esports)
    ═══════════════════════════════════════════════════ */
 
 :root {
   /* ── Background Hierarchy ── */
-  --bg-void:        hsl(220, 25%, 97%);     /* Page background */
-  --bg-surface:     #ffffff;                /* Cards, panels, headers */
-  --bg-elevated:    hsl(220, 20%, 96%);     /* Chips, inputs, secondary fills */
-  --bg-hover:       hsl(220, 18%, 92%);     /* Interactive hover states */
+  --bg-void:        hsl(240, 30%, 8%);      /* Page background (#0e0e1a) */
+  --bg-surface:     hsl(240, 26%, 12%);     /* Cards, panels, headers */
+  --bg-elevated:    hsl(240, 22%, 17%);     /* Chips, inputs, secondary fills */
+  --bg-hover:       hsl(240, 20%, 22%);     /* Interactive hover states */
 
-  /* ── Brand Accent — Deep Blue ── */
-  --accent-primary:   hsl(224, 76%, 48%);   /* Primary actions, active states */
-  --accent-secondary: hsl(224, 72%, 42%);   /* Links, highlights, ratings */
-  --accent-tertiary:  hsl(262, 55%, 52%);   /* Occasional pop */
+  /* ── Brand Accent — Naranja competitivo ── */
+  --accent-primary:   hsl(24, 96%, 53%);    /* Primary actions, active states */
+  --accent-secondary: hsl(190, 90%, 60%);   /* Links, highlights, ratings (cian) */
+  --accent-tertiary:  hsl(38, 95%, 55%);    /* Occasional pop (dorado) */
   --accent-gradient:  linear-gradient(135deg,
-                        hsl(224, 76%, 46%) 0%,
-                        hsl(218, 80%, 55%) 100%);
-  --accent-glow:      hsla(224, 76%, 48%, 0.18);
-  --accent-soft:      hsla(224, 76%, 48%, 0.08);  /* Tinted fills (active chips) */
+                        hsl(18, 95%, 50%) 0%,
+                        hsl(32, 98%, 55%) 100%);
+  --accent-glow:      hsla(24, 96%, 53%, 0.28);
+  --accent-soft:      hsla(24, 96%, 53%, 0.12);  /* Tinted fills (active chips) */
 
   /* ── Semantic Colors ── */
-  --success:    hsl(152, 55%, 36%);
-  --warning:    hsl(36, 90%, 44%);
-  --danger:     hsl(356, 70%, 48%);
-  --info:       hsl(203, 80%, 42%);
-  --success-soft: hsla(152, 55%, 36%, 0.10);
-  --danger-soft:  hsla(356, 70%, 48%, 0.08);
-  --warning-soft: hsla(36, 90%, 44%, 0.10);
+  --success:    hsl(152, 60%, 46%);
+  --warning:    hsl(38, 95%, 55%);
+  --danger:     hsl(356, 80%, 60%);
+  --info:       hsl(203, 85%, 58%);
+  --success-soft: hsla(152, 60%, 46%, 0.14);
+  --danger-soft:  hsla(356, 80%, 60%, 0.12);
+  --warning-soft: hsla(38, 95%, 55%, 0.14);
 
   /* ── Text Hierarchy ── */
-  --text-primary:     hsl(222, 35%, 13%);   /* Titles, active items */
-  --text-secondary:   hsl(222, 16%, 32%);   /* Body, secondary labels */
-  --text-tertiary:    hsl(220, 10%, 48%);   /* Helper text, timestamps */
-  --text-on-accent:   #ffffff;
+  --text-primary:     hsl(240, 25%, 93%);   /* Titles, active items */
+  --text-secondary:   hsl(240, 14%, 74%);   /* Body, secondary labels */
+  --text-tertiary:    hsl(240, 10%, 56%);   /* Helper text, timestamps */
+  --text-on-accent:   #ffffff;              /* Texto sobre botones naranjas */
 
   /* ── Borders & Dividers ── */
-  --border-subtle:    hsl(220, 16%, 91%);
-  --border-default:   hsl(220, 14%, 85%);
-  --border-strong:    hsl(220, 12%, 74%);
-  --border-accent:    hsla(224, 76%, 48%, 0.45);
+  --border-subtle:    hsl(240, 18%, 19%);
+  --border-default:   hsl(240, 15%, 26%);
+  --border-strong:    hsl(240, 12%, 38%);
+  --border-accent:    hsla(24, 96%, 53%, 0.55);
 
   /* ── Spacing Scale (8px base) ── */
   --space-1: 0.25rem;   /* 4px  */
@@ -59,16 +60,16 @@
   --radius-xl:  20px;
   --radius-pill: 9999px;
 
-  /* ── Shadows (light UI: soft, low-spread) ── */
-  --shadow-sm:  0 1px 2px rgba(16, 24, 40, 0.06),
-                0 1px 3px rgba(16, 24, 40, 0.08);
-  --shadow-md:  0 2px 4px rgba(16, 24, 40, 0.06),
-                0 8px 24px rgba(16, 24, 40, 0.10);
-  --shadow-lg:  0 4px 8px rgba(16, 24, 40, 0.08),
-                0 20px 48px rgba(16, 24, 40, 0.16);
-  --shadow-glow: 0 1px 2px rgba(16, 24, 40, 0.10),
-                 0 4px 16px hsla(224, 76%, 48%, 0.28);
-  --ring: 0 0 0 3px hsla(224, 76%, 48%, 0.22);
+  /* ── Shadows (dark UI: profundidad + glow) ── */
+  --shadow-sm:  0 1px 2px rgba(0, 0, 0, 0.35),
+                0 1px 3px rgba(0, 0, 0, 0.30);
+  --shadow-md:  0 2px 4px rgba(0, 0, 0, 0.35),
+                0 8px 24px rgba(0, 0, 0, 0.45);
+  --shadow-lg:  0 4px 8px rgba(0, 0, 0, 0.40),
+                0 20px 48px rgba(0, 0, 0, 0.55);
+  --shadow-glow: 0 1px 2px rgba(0, 0, 0, 0.40),
+                 0 4px 20px hsla(24, 96%, 53%, 0.38);
+  --ring: 0 0 0 3px hsla(24, 96%, 53%, 0.30);
 
   /* ── Typography ── */
   --font-display: 'Outfit', system-ui, -apple-system, sans-serif;
